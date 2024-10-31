@@ -1,0 +1,80 @@
+% Chapter 1
+% 
+\chapter{Retraction Maps} % Main chapter title
+\label{chap:retr} % For referencing the chapter elsewhere, use Chapter~\ref{Chapter1}
+
+
+%-------------------------------------------------------------------------------
+%---------
+%
+\section{Introduction} 
+\label{sec:retr-intro} %For referencing this section elsewhere, use Section~\ref{sec:chap1_introduction}
+
+The notion of a retraction map is fundamental in research areas like optimization theory, machine learning, numerical analysis, and in this context, geometric integrators. \\ Many mechanical systems usually evolve on manifolds, which naturally requires some method of discretely approximating the dynamics on the manifold (i.e., the geodesic). 
+
+In Riemannian geometry, this idea is given by the exponential map. On a Riemannian manifold $(M, g)$, we define $\exp: T_x M \lra M$ as the exponential map at the point $x$. For instance, if  $\gamma: [0, 1] \lra M$ is a unique geodesic on $M$, and $\gamma(0) = x$, then $\exp_x(v) = \gamma(1)$, where $v \in T_x M$ is the initial velocity of the geodesic at $x$ such that $\dot{\gamma}(0) = v$.
+
+    \begin{figure}[h]
+        \centering
+        \scalebox{0.8}{
+           \begin{tikzpicture}[
+          point/.style = {draw, circle, fill=black, inner sep=1.4pt}
+        ]
+                \draw[fill=green!15, draw=black, shift={(0.4, 1.4)},scale=1.5] (0, 0) to[out=20, in=140] (3, -0.4) to [out=60, in=160] (10, 1) to[out=130, in=60]
+          cycle;
+        \filldraw[xslant=-0.5, fill=gray!60, opacity=0.25]
+          (8,7) -- (16,7) -- (16,3) -- (8,3) -- cycle; 
+          \node at (11.6, 6) {$T_x M$};
+          \node at (2,2.4) {$M$};
+          \node at (10, 5) {$x = \gamma(0)$};
+          \node[red] at (7, 5) {$v = \dot{\gamma}(0)$};
+          \node[blue] at (4.5, 3) {$\Ret_x(v)$};
+          \node[black] at (6.8, 3.7) {$\gamma(t)$};
+          \coordinate (X) at (9,4.9);
+          \coordinate (O) at (5.4,4.4);
+          \coordinate (P) at (5.4,2.4);
+            \node[point] at (X) {};
+          \node[point] at (P) {};
+          \draw[thick, dashed] (5.5, 2.7) arc (153:92:4);
+          \draw[blue, -{Latex[length=4mm]}] (O) -- (P);
+          \draw[red, -{Latex[length=4mm]}] (X) -- (O);
+        \end{tikzpicture}}
+        \caption{Retraction maps: A visualization}
+            \label{fig:retraction}
+        \end{figure}
+
+Let $M$ be an $n$ dimensional manifold, and $TM$ be its tangent bundle.
+
+\begin{defn} 
+\label{defn:retraction}
+    We define a \textbf{retraction map} on a manifold $M$ as a smooth map $\Ret: TM \to M$, such that if $\Ret_x$ be the restriction of $\Ret$ to $T_x M$, then the following properties are satisfied:
+
+    \begin{enumerate}
+        \item $\Ret_x (0_x) = x$ where $0_x$ is the zero element of $T_x M$.
+        \item $\text{D}\Ret_x (0_x ) = T_{0_x} \Ret_x = \text{Id}_{T_x M} $, where $\text{Id}_{T_x M}$ is the identity mapping on $T_x M$.
+    \end{enumerate}
+\end{defn}
+
+Here, the first property is trivial, whereas the second property is known as the \textbf{local rigidity condition} since, given $v \in T_x M$, the curve $\gamma_v(t) = \Ret_x(tv)$ has initial velocity $v$ at $x$. Hence,
+
+$$
+  \dot{\gamma}_v (t) = \langle \text{D}\Ret_x (tv) , v \rangle \implies \dot{\gamma}_v (0) = \text{Id}_{T_x M}(v) = v
+$$
+
+\section{Discretization maps}
+
+The structure of the document can be divided in three major parts: Introduction, Body and Conclusions.
+
+The introduction includes, at least, a statement of what was the work developed; a brief, focused, state of the art; an explanation of how the work fits into the current state of the art, and how it contributes to it; a description of the structure of the document.
+
+The Body of the dissertation should include a literature review (in one or more chapters) and one or more chapters that describe the work developed and the results, justifying them adequately.
+
+The conclusions make a final balance of the work, highlighting the main aspects of the work and making critical judgments about what was accomplished, and providing suggestions for future work, if appropriate. 
+
+\section{Formatting}
+
+The document can be written in Portuguese or English. The minimum number of pages is 60 and the maximum is 120 (not counting the Annexes). Small deviations are allowed. Please follow the margins and fonts  defined in this template. The font size should be 11pt. The document should be printed double sided.
+
+Note that the graphical aspect of the thesis is important, but does not replace a well-written and well-organised presentation of ideas.
+
+Please refer to Chapter~\ref{chap:Chapter2} and Chapter~\ref{chap:Chapter3} for details about this template, how to format the document and insert citations, figures, tables, equations and other elements.

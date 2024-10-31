@@ -1,0 +1,53 @@
+\usepackage[dvipsnames]{xcolor}
+\usepackage{braket}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage{amsfonts}
+\usepackage{derivative}
+\usepackage{mathtools}
+\usepackage[T1]{fontenc}
+\usepackage{mathabx}
+\numberwithin{equation}{section}
+\numberwithin{figure}{section}
+\numberwithin{table}{section}
+\renewcommand{\theequation}{\arabic{section}.\arabic{equation}}
+\renewcommand{\thefigure}{\arabic{section}.\arabic{figure}}
+\renewcommand{\thetable}{\arabic{section}.\arabic{table}}
+\usepackage{tikz}
+\usetikzlibrary{matrix}
+\usetikzlibrary{graphs}
+\usetikzlibrary {chains,scopes}
+\usetikzlibrary {arrows.meta,automata,positioning}
+\usepackage{pgfplots}
+\usepackage{pgfplotstable}
+\usepgfplotslibrary{groupplots}
+\pgfplotsset{compat=1.18}
+%%%%%%%Thm_like_environment%%%%%%
+\newtheorem{thm}{Theorem}[section]
+\newtheorem{lem}[thm]{Lemma}
+\newtheorem{prop}[thm]{Proposition}
+\newtheorem{defn}{Definition}[section]
+\newtheorem{rmk}{Remark}[section]
+% \newtheorem*{remark}{Remark} 
+%%%%%%%%%%%%%%%%%%%%%%%%%%
+\renewcommand{\mapsto}{\ensuremath{\longmapsto}}
+\newcommand{\lra}{\ensuremath{\longrightarrow}}
+%%%%%%%Operatorsandnotation%%%%%
+\DeclareMathOperator{\T}{T}
+%%%%%%%%%
+\newcommand{\R}[1][]{\ensuremath{\mathbb{R}^{#1}}}
+\newcommand{\Ret}{\ensuremath{\mathcal{R}}}
+\newcommand{\N}{\ensuremath{\mathbb{N}}}
+\newcommand{\Z}{\ensuremath{\mathbb{Z}}}
+\newcommand{\natn}[1]{[#1]}
+%%%%%%%%%%%%%%
+%\newcommand{\:}{\colon}
+\newcommand{\I}{\mathcal{I}}
+\newcommand{\Open}[1]{\mathcal{O}({#1})}
+\newcommand{\norm}[1]{\ensuremath{\left\lVert #1 \right\rVert}}
+\newcommand{\bmat}[1]{\begin{bmatrix}#1\end{bmatrix}}
+\newcommand{\pmat}[1]{\begin{pmatrix}#1\end{pmatrix}}
+\newcommand{\mat}[1]{\begin{matrix}#1\end{matrix}}
+%%%%%%%%%%%%%%%%%
+\renewcommand{\forall}{\text{for all }}
