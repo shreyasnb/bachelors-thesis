@@ -47,7 +47,7 @@ Let $M$ be an $n$ dimensional manifold, and $TM$ be its tangent bundle.
 
 \begin{defn} 
 \label{defn:retraction}
-    We define a \textbf{retraction map} on a manifold $M$ as a smooth map $\Ret: TM \to M$, such that if $\Ret_x$ be the restriction of $\Ret$ to $T_x M$, then the following properties are satisfied:
+We define a \textbf{retraction map} on a manifold $M$ as a smooth map $\Ret: TM \to M$, such that if $\Ret_x$ be the restriction of $\Ret$ to $T_x M$, then the following properties are satisfied:
 
     \begin{enumerate}
         \item $\Ret_x (0_x) = x$ where $0_x$ is the zero element of $T_x M$.
@@ -57,24 +57,113 @@ Let $M$ be an $n$ dimensional manifold, and $TM$ be its tangent bundle.
 
 Here, the first property is trivial, whereas the second property is known as the \textbf{local rigidity condition} since, given $v \in T_x M$, the curve $\gamma_v(t) = \Ret_x(tv)$ has initial velocity $v$ at $x$. Hence,
 
-$$
+\[
   \dot{\gamma}_v (t) = \langle \text{D}\Ret_x (tv) , v \rangle \implies \dot{\gamma}_v (0) = \text{Id}_{T_x M}(v) = v
-$$
+\]
 
 \section{Discretization maps}
 
-The structure of the document can be divided in three major parts: Introduction, Body and Conclusions.
+\begin{defn}
+A map $\D : U \subset TM \lra M \times M$ given by 
 
-The introduction includes, at least, a statement of what was the work developed; a brief, focused, state of the art; an explanation of how the work fits into the current state of the art, and how it contributes to it; a description of the structure of the document.
+\[
+  \D (x,v) = \left( \Ret^1_x(v), \Ret^2_x(v) \right)
+\]
 
-The Body of the dissertation should include a literature review (in one or more chapters) and one or more chapters that describe the work developed and the results, justifying them adequately.
+where $U$ is the open neighborhood of the zero section $0_x \in TM$, is called a \textbf{discretization map} on $M$, if the following properties are satisfied:
 
-The conclusions make a final balance of the work, highlighting the main aspects of the work and making critical judgments about what was accomplished, and providing suggestions for future work, if appropriate. 
+\begin{enumerate}
+  \item $\D(x,0_x) = (x,x)$ 
+  \item $T_{0_x}\Ret_x^2 - T_{0_x}\Ret_x^1 = \text{Id}_{T_x M}$, which is the identity map on $T_x M$ for any $x \in M$.
+\end{enumerate}
+\end{defn}
 
-\section{Formatting}
+Using this definition, one can prove (not included here) that the discretization map $\D$ is a local diffeomorphism around the zero section $0_x \in TM$. This is a crucial property for the construction of geometric integrators, since we need to be able to define $\D^{-1} (x_k, x_{k+1})$.
 
-The document can be written in Portuguese or English. The minimum number of pages is 60 and the maximum is 120 (not counting the Annexes). Small deviations are allowed. Please follow the margins and fonts  defined in this template. The font size should be 11pt. The document should be printed double sided.
+Thus, given a vector field $X \in \mathfrak{X}(M)$ on $M$, i.e., $X: M \lra TM$ such that $\tau_M \circ X = \text{Id}_M$, where $\tau_M: TM \lra M$ is the canonical projection on the tangent bundle, we can approximate the integral curve by the following first-order discrete equation:
 
-Note that the graphical aspect of the thesis is important, but does not replace a well-written and well-organised presentation of ideas.
+\[
+  h X(\tau_M(\D^{-1}(x_k, x_{k+1}))) = \D^{-1}(x_k, x_{k+1})
+\]
 
-Please refer to Chapter~\ref{chap:Chapter2} and Chapter~\ref{chap:Chapter3} for details about this template, how to format the document and insert citations, figures, tables, equations and other elements.
+Hence, given an initial condition $x_0$, we may be able to solve the discrete equation iteratively to obtain the sequence $\{x_k\}$ which is indeed an approximation of $\{x(kh)\}$, where $x(t)$ is the integral curve of $X$ with initial condition $x_0$ and time-step $h$.
+
+\subsection{Examples}
+We consider a few examples of discretization maps on $\R[n]$:
+
+\begin{table}[h]
+\centering
+\begin{tabular}{|c|c|c|}
+\hline
+ Discretization map $\D$ & Scheme & Order \\
+\hline
+ $\D(x,v) = (x, x + v)$ & Forward Euler $x_{k+1} = x_k + hX(x_k)$ & $\mathcal{O}(h)$ \\
+ $\D(x,v) = (x - v, x)$ & Backward Euler $x_k = x_{k+1} - hX(x_{k+1})$ & $\mathcal{O}(h)$\\
+ $\D(x, v) = \left(x - \dfrac{v}{2}, x + \dfrac{v}{2} \right)$ & Symmetric Euler $x_{k+1} = x_k + hX\left( \dfrac{x_k + x_{k+1}}{2}\right)$ & $\mathcal{O}(h^2)$\\
+\hline
+\end{tabular}
+\end{table}
+
+
+\section{Lifts of discretization maps}
+
+As mentioned before, discretization maps are diffeomorphisms around the zero section $0_x \in TM$. 
+This is useful because typically when studying mechanical systems, we would like to define the discretization map on the tangent bundle $TM$ (for Lagrangian frameworks) or the cotangent bundle $T^*M$ (for Hamiltonian frameworks), in order to generate geometric integrators on the manifold.
+
+Thus, since discretization maps can be defined on different manifolds, we denote $\D^{TM} : TM \lra M \times M$ as a discretization map on $M$.
+
+\subsection{Tangent Lifts of Discretization Maps}
+
+Given a smooth map $\varphi: M \lra N$ between two $n$-dimenstional manifolds $M$ and $N$, we can define the \textbf{tangent lift} of $\varphi$ as the map $T\varphi: TM \lra TN$ such that
+
+\[
+  T\varphi(v_x) = T_x \varphi(v_x) \in T_{\varphi(x)} N
+\]
+
+where $v_x \in T_x M$ and $T_x\varphi$ is the tangent map of $\varphi$, whose matrix is the Jacobian at $x \in M$, in a local chart.
+
+\begin{prop}
+Let $M$ and $N$ be two $n$-dimensional manifolds, and $\varphi: M \lra N$ be a smooth map (diffeomorphism). For a given discretization map $\D^{TM}$ on $M$, the map $\D_{\varphi} :=  (\varphi \times \varphi) \circ \D^{TM} \circ T \varphi ^{-1}$ is a discretization map on $N$ i.e., $\D_{\varphi} \equiv \D^{TN} : TN \lra N \times N$.
+\end{prop}
+
+
+\begin{proof}
+  For any given $y \in N$, we have that 
+  \begin{equation*}
+    \begin{split}
+      \D_{\varphi} (y, 0_y) &= ((\varphi \times \varphi) \circ \D^{TM} \circ T\varphi^{-1}) (y, 0_y) \\
+      &= ((\varphi \times \varphi) \circ \D^{TM} \circ T\varphi^{-1}) (\varphi(x), 0_{\varphi(x)}) \\
+      &= (\varphi \times \varphi) \circ \D^{TM} (x, 0_x) \\ 
+      &= (\varphi \times \varphi) (x, x) = (y, y)
+    \end{split}
+  \end{equation*}
+
+  which proves the first condition. For the second condition, let $v_y \in T_y N$, be a given vector.
+  \begin{equation*}
+    \begin{split}
+      (T_{0_x} \Ret_{x, \varphi}^2 - & T_{0_x} \Ret_{x, \varphi}^1 )(y, u_y) = \dfrac{d}{ds} \bigg{|}_{s=0} \left( \Ret_{x, \varphi}^2 (y, su_y) - \Ret_{x, \varphi}^1 (y, su_y) \right) \\
+      &= \dfrac{d}{ds} \bigg{|}_{s=0} \left(\varphi \circ \Ret^1_x \circ T\varphi^{-1} (y, su_y) \right) -  \left( \varphi \circ \Ret^2_x \circ T \varphi^{-1}(y, su_y) \right) \\
+      &= T_y \varphi \left( \dfrac{d}{ds} \bigg{|}_{s=0} \left[ \Ret^1_x(t(T\varphi^{-1} (y, u_y))) \right] - \left[ \Ret^2_x(t(T\varphi^{-1} (y, u_y))) \right] \right) \\
+      &= T_y \varphi (T_y \varphi^{-1} (y, u_y)) = (y, u_y)
+    \end{split}
+  \end{equation*}
+This satisfies the local rigidity condition.
+\end{proof}
+
+The above proposition can be visualized as shown below in Figure~\ref{fig:commutator}.
+
+\begin{figure}[h]
+  \centering
+  \begin{tikzpicture}
+\matrix (m) [matrix of math nodes,row sep=3em,column sep=4em,minimum width=2em]
+{
+   TM & TN \\ M \times M & N \times N \\};
+\path[-stealth]
+  (m-1-1) edge node [above] {$T\varphi$} (m-1-2)
+  (m-1-1) edge node [left] {$\D^{TM}$} (m-2-1)
+  (m-1-2) edge node [right] {$\D^{TN}$} (m-2-2)
+  (m-2-1) edge node [below] {$\varphi \times \varphi$} (m-2-2);
+\end{tikzpicture}
+  \caption{$\D^{TM}$ and $\D^{TN}$ commute as shown}
+  \label{fig:commutator}
+\end{figure}
