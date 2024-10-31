@@ -45,8 +45,7 @@ In Riemannian geometry, this idea is given by the exponential map. On a Riemanni
 
 Let $M$ be an $n$ dimensional manifold, and $TM$ be its tangent bundle.
 
-\begin{defn} 
-\label{defn:retraction}
+\begin{defn}\label{defn:retraction}
 We define a \textbf{retraction map} on a manifold $M$ as a smooth map $\Ret: TM \to M$, such that if $\Ret_x$ be the restriction of $\Ret$ to $T_x M$, then the following properties are satisfied:
 
     \begin{enumerate}
@@ -102,6 +101,7 @@ We consider a few examples of discretization maps on $\R[n]$:
  $\D(x, v) = \left(x - \dfrac{v}{2}, x + \dfrac{v}{2} \right)$ & Symmetric Euler $x_{k+1} = x_k + hX\left( \dfrac{x_k + x_{k+1}}{2}\right)$ & $\mathcal{O}(h^2)$\\
 \hline
 \end{tabular}
+\caption{Examples of discretization maps}
 \end{table}
 
 
@@ -147,7 +147,8 @@ Let $M$ and $N$ be two $n$-dimensional manifolds, and $\varphi: M \lra N$ be a s
       &= T_y \varphi (T_y \varphi^{-1} (y, u_y)) = (y, u_y)
     \end{split}
   \end{equation*}
-This satisfies the local rigidity condition.
+
+Thus, both the conditions from Definition~\ref{defn:retraction} are satisfied.
 \end{proof}
 
 The above proposition can be visualized as shown below in Figure~\ref{fig:commutator}.
