@@ -1,0 +1,121 @@
+\documentclass{beamer}
+%\documentclass[handout,t]{beamer}
+
+\batchmode
+% \usepackage{pgfpages}
+% \pgfpagesuselayout{4 on 1}[letterpaper,landscape,border shrink=5mm]
+
+\usepackage{amsmath,amssymb,enumerate,epsfig,bbm,calc,color,ifthen,capt-of}
+
+\usetheme{Berlin}
+\usecolortheme{mit}
+
+\title{Feedback Linearizable Discretizations of Mechanical Systems using Retraction Maps} 
+\author{Shreyas N B}
+\date{\today}
+\pgfdeclareimage[height=0.5cm]{iitb-logo}{../Figures/iitblogo.png}
+\logo{\pgfuseimage{iitb-logo}\hspace*{0.3cm}}
+
+\AtBeginSection[]
+{
+  \begin{frame}<beamer>
+    \frametitle{Outline}
+    \tableofcontents[currentsection]
+  \end{frame}
+}
+\beamerdefaultoverlayspecification{<+->}
+% -----------------------------------------------------------------------------
+\begin{document}
+% -----------------------------------------------------------------------------
+
+\frame{\titlepage}
+
+\section[Outline]{}
+\begin{frame}{Outline}
+  \tableofcontents
+\end{frame}
+
+% -----------------------------------------------------------------------------
+\section{Introduction}
+\subsection{Feedback Linearization}
+\begin{frame}{Definitions}
+  Let $M$ and $N$ be two $n$-dimensional manifolds and $\phi: M \to N$ be a diffeomorphism. Let $X \in \mathfrak{X}(M)$ be a vector field on $M$. Then, $X_{\phi} := T\phi \circ X \circ \phi^{-1}$ is a vector field on $N$.
+  \begin{block}{Feedback Linearization}
+    Let $x_0 \in \mathcal{O}(x_0)$ and $u_0 \in \mathcal{O}(u_0)$ be such that $f(x_0,u_0) = 0$. Then, the system is locally feedback linearizable if there exists a diffeomorphism $\phi: M \to N$ such that $X_{\phi} = \frac{\partial}{\partial x_n}$. 
+
+  \end{block}
+
+\end{frame}
+\begin{frame}{MIT Hack}
+  The HACK:
+  \pause
+  \begin{itemize}
+    \item<2-> Tom O'Connor - wanted to measure Harvard bridge to track his progress when walking
+    \item<3-> Smoot's height chosen as unit of measurement (he was the shortest)
+    \item<4-> Seven freshman measured Harvard bridge using Smoot's body to mark distance
+    \item<5-> Result: Harvard Bridge = 364.4 smoots (+an ear)
+  \end{itemize}
+\end{frame}
+\begin{frame}{Career}
+  \begin{itemize}
+    \item<1-> Chairman of the American National Standards Institute 
+    \item<2-> Served as president of the International Organization for Standardization from 2003 to 2005.
+  \end{itemize}
+\end{frame}
+% 
+
+\subsection{Retraction Maps}
+
+\begin{frame}{What is a Smoot?}
+  \begin{itemize}
+    \item An imprecise unit of measurement originating from famous MIT hack
+    \item 1 smoot = 5 feet and 7 inches
+    \item Harvard bridge = 364.4 smoots (+ an ear)
+  \end{itemize}
+\end{frame}
+
+\subsection{Mechanical Systems}
+
+\begin{frame}{MIT Hack}
+  The HACK:
+  \pause
+  \begin{itemize}
+    \item<2-> Tom O'Connor - wanted to measure Harvard bridge to track his progress when walking
+    \item<3-> Smoot's height chosen as unit of measurement (he was the shortest)
+    \item<4-> Seven freshman measured Harvard bridge using Smoot's body to mark distance
+    \item<5-> Result: Harvard Bridge = 364.4 smoots (+an ear)
+  \end{itemize}
+\end{frame}
+
+\section{MF-Linearization}
+\subsection{MF-Linearizability}
+\begin{frame}{Career}
+  \begin{itemize}
+    \item<1-> Chairman of the American National Standards Institute 
+    \item<2-> Served as president of the International Organization for Standardization from 2003 to 2005.
+  \end{itemize}
+\end{frame}
+
+\subsection{Examples}
+\begin{frame}{Examples}
+  \begin{itemize}
+    \item<1-> Inverted Pendulum
+    \item<2-> Double Pendulum
+    \item<3-> Cart-Pole System
+  \end{itemize}
+\end{frame}
+
+\section{Conclusions}
+\subsection{Some results}
+\begin{frame}{Questions and Answers}
+  Want to know more?
+
+  \begin{itemize}
+    \item Browse \url{http://web.mit.edu/smoot/history.htm}.
+    \item Smoot's Legacy \url{http://alum.mit.edu/news/AlumniNews/Archive/smoots_legacy}.
+    \item Smoot Salute! \url{http://web.mit.edu/spotlight/smoot-salute}.
+  \end{itemize}
+
+\end{frame}
+
+\end{document}
