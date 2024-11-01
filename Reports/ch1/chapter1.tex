@@ -168,3 +168,102 @@ The above proposition can be visualized as shown below in Figure~\ref{fig:commut
   \caption{$\D^{TM}$ and $\D^{TN}$ commute as shown}
   \label{fig:commutator}
 \end{figure}
+
+Now, if we suitably lift the discretization map $\D : TM \lra M \times M$, we can get a discretization map on $TM$, i.e., we can define $\D^{TTM} : TTM \lra TM \times TM$ as a discretization map on $TM$. This construction will provide the geometric framework for integrators for second-order differential equations (SODEs) on manifolds, and consequently, for mechanical systems.
+
+Let $M$ be an $n$-dimensional manifold, and $\tau_M : TM \lra M$ be the canonical projection on the tangent bundle. We denote $TTM$ as the \textbf{double tangent bundle} of $M$.
+
+We note that the manifold $TTM$ naturally accepts two different vector bundle structures:
+
+\begin{enumerate}
+  \item The canonical vector bundle with projection $\tau_{TM} : TTM \lra TM$.
+  \item The vector bundle given by the projection of the tangent map $T \tau_M : TTM \lra TM$. 
+\end{enumerate}
+
+Thus, we denote the canonical involution map $\kappa_M : TTM \lra TTM$ which is a vector bundle isomorphism, over the identity of $TM$ between the above two vector bundle structures.
+
+This can be seen here: Let $(x,v)$ be the canonical coordinates on $TM$, and $(x, v, \dot{x}, \dot{v})$ are the corresponding canonical fibered coordinates on $TTM$. Then,
+
+\[
+ \kappa_M (x, v, \dot{x}, \dot{v}) = (x,\dot{x}, v, \dot{v})
+\]
+
+\begin{rmk}{Why do we need this?}
+  Remember that the tangent lift of a vector field $X$ on $M$ does not define a vector field on $TM$. It is necessary to consider the composition $\kappa_M \circ TX$ to obtain a vector field on $TM$, and this is called the \textbf{complete lift} $X^c$ of the vector field $X$. 
+  Hence, a similar technique must be used to lift a discretization map from $TM$ to $TTM$.
+\end{rmk}
+
+\begin{figure}[h]
+  \centering
+  \begin{tikzpicture}[transform shape]
+\matrix (m) [matrix of math nodes,row sep=3em,column sep=5em,minimum width=0.1em]
+{
+   TTM & TM \times TM \\ TTM & T(M \times M) \\ TM & M \times M \\};
+\path[-stealth]
+    (m-1-1) edge node [above] {$\D^{TTM}$} (m-1-2)
+    (m-2-1) edge node [above] {$T \D^{TM}$} (m-2-2)
+    (m-2-1) edge node [left] {$\tau_{TM}$} (m-3-1)
+    (m-2-2) edge node [right] {$\tau_{M \times M}$} (m-3-2)
+    (m-3-1) edge node [above] {$\D^{TM}$} (m-3-2); 
+\path[<->]
+    (m-1-1) edge node [left] {$\kappa_M$} (m-2-1)
+    (m-2-1) edge node [right] {$\kappa_M$} (m-1-1);
+\draw[double]
+    (m-1-2) -- (m-2-2);
+\end{tikzpicture}
+  \caption{Tangent lift structure of discretization maps}
+  \label{fig:tangent-lift}
+\end{figure}
+
+Using the above construction, we can now define the tangent lift of a discretization map.
+
+\begin{prop}
+  If $\D^{TM} : TM \lra M \times M$ is a discretization map on $M$, then the map defined by $\D^{TTM} = T\D^{TM} \circ \kappa_M$ is a discretization map on $TM$.
+\end{prop}
+
+\begin{proof}
+  For $(x,v,\dot{x}, \dot{v}) \in TTM$, we have that 
+  
+  \[T\D^{TM}(x,v,\dot{x}, \dot{v}) = \left( \D^{TM}(x,v), D_{(x,v)} \D^{TM}(x,v) {(\dot{x}, \dot{v})}^T \right)\] and
+  \[
+    \D^{TTM}(x, \dot{x}, v, \dot{v}) = (\D^{TM}(x,v), D_{(x,v)}\D^{TM}{(\dot{x}, \dot{v})}^T) 
+  \]
+
+  Using the properties defined in Definition~\eqref{defn:retraction},  
+  \begin{enumerate}
+      \item We know that $\D^{TM}(x, 0) = (x,x) \ \forall x \in M$. Thus,
+      \begin{equation*}
+      \begin{split}
+          \D^{TTM}(x,\dot{x}, 0, 0) & = \left( \D^{TM}(x, 0), D_{(x,0)} \D^{TM}(\dot{x}, 0) \right) \\
+          & = (x,x, \dot{x}, \dot{x}) \equiv (x, \dot{x}, x, \dot{x})
+      \end{split}
+      \end{equation*}
+       
+      where we trivially identify $T(M \times M) \equiv TM \times TM$.
+      \item For the rigidity property, we know that
+      \[\D^{TTM}(x, \dot{x}, v, \dot{v}) = \left({(T\Ret^1)}_{(x,\dot{x})}(v, \dot{v}), {(T\Ret^2)}_{(x,\dot{x})}(v, \dot{v}) \right)\]
+      So, we need to compute 
+      \[T_{{(0,0)}_{(x,\dot{x})}}{(T\Ret^a)}_{(x, \dot{x})}(x, \dot{x}) : T_{(x, \dot{x})}TM \lra T_{(x, \dot{x})}TM\]
+      for $a=1,2$, to prove that the map ${T(T\Ret^2)}_{(x,\dot{x})} - T(T\Ret^1)_{(x, \dot{x})}$ is the identity map at the zero section $(0,0)_{(x,\dot{x})}$, from $T_{(x, \dot{x})} TM$ to itself.
+
+      We can calculate 
+          \[\dfrac{d}{ds}\bigg|_{s=0} \left( \Ret^a_x( sv), \partial_{x} \Ret^a_x(sv) \dot{x} + \partial_v \Ret^a_x(sv) s \dot{v} \right)\]
+      
+      At $(x, \dot{x}, 0, 0)$, the map $T_{(0,0)_{(x, \dot{x})}}(T\Ret^a)_{(x, \dot{x})}$ is thus given by:
+      \[\pmat{
+      \partial_{v^j}(\Ret^a)^i(x, 0) & 0 \\
+      \partial_{x^k} \partial_{v^j} (\Ret^a)^i(x,0) \dot{x}^k & \partial_{v^j}(\Ret^a)^i(x,0)
+      }\]
+      
+      \vspace{-1mm}
+      Thus, using the properties of the discretization map $\D$, we have the Jacobian matrix of $(T\Ret^2)_{(x, \dot{x})} - (T\Ret^1)_{(x, \dot{x})}$ at $(0,0)_{(x, \dot{x})}$ as:
+      \[\pmat{
+      \partial_{v}(\Ret^2-\Ret^1)(x,0) & 0 \\
+      \partial_x(\partial_v(\Ret^2 - \Ret^1)(x,0))\dot{x} & \partial_v (\Ret^2-\Ret^1)(x,0)
+      }
+      \]
+
+      \vspace{-1mm}
+      which is indeed equal to the identity $\text{ Id}_{2n \times 2n}$, since $\partial_v (\Ret^2-\Ret^1)(x,0) = \text{ Id}_{n \times n}$ which also implies $\partial_x(\partial_v(\Ret^2 - \Ret^1))(x,0) = 0$
+  \end{enumerate}
+\end{proof}
