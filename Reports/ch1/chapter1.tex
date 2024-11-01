@@ -267,3 +267,28 @@ Using the above construction, we can now define the tangent lift of a discretiza
       which is indeed equal to the identity $\text{ Id}_{2n \times 2n}$, since $\partial_v (\Ret^2-\Ret^1)(x,0) = \text{ Id}_{n \times n}$ which also implies $\partial_x(\partial_v(\Ret^2 - \Ret^1))(x,0) = 0$
   \end{enumerate}
 \end{proof}
+
+\subsection{Example}
+
+Let us consider the midpoint rule as an example. Thus, if $M$ is a vector space, $\D : TM \lra M \times M$ is the discretization map given by $\D(x,v) = \left( x - \frac{1}{2}v, x + \frac{1}{2}v \right)$. We can also compute the inverse map as $\D^{-1}(x_k, x_{k+1}) = \left(\dfrac{x_k + x_{k+1}}{2}, x_{k+1} - x_k \right)$.
+
+\newpage
+
+To define the tangent lift of $\D$, denoted by $\D^{TTM}: TTM \lra TM \times TM$, we need to compute the Jacobian of $\D$,
+
+\[
+  D_{(x,v)} \D = \pmat{ \text{Id} & -\dfrac{1}{2} \text{Id} \\ \text{Id} & \dfrac{1}{2} \text{Id}}
+\]
+which yields the tangent lift of $\D$ as:
+
+\begin{equation*}
+  \begin{split}
+    \D^{TTM} (x, \dot{x}, v, \dot{v}) &= (T\D \circ \kappa_M)\left( x, \dot{x}, v, \dot{v} \right) = T\D(x, v ; \dot{x}, \dot{v}) \\
+    &= \left( x - \dfrac{1}{2}v, x + \dfrac{1}{2}v ; \dot{x} - \dfrac{1}{2}\dot{v}, \dot{x} + \dfrac{1}{2} \dot{v} \right) \\
+    & \equiv \left( x - \dfrac{1}{2}v, \dot{x} - \dfrac{1}{2}\dot{v} ; x + \dfrac{1}{2}v, \dot{x} + \dfrac{1}{2} \dot{v} \right)
+  \end{split}
+\end{equation*}
+
+We can also obtain the inverse map of $\D^{TTM}$ as 
+
+\[ {\left(\D^{TTM}\right)}^{-1} (x_k, v_k; x_{k+1}, v_{k+1}) = \left( \dfrac{x_k + x_{k+1}}{2}, \dfrac{v_k + v_{k+1}}{2}; x_{k+1} - x_k, v_{k+1} - v_k \right) \]
