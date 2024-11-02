@@ -1,13 +1,13 @@
 % Chapter 1
 % 
-\chapter{Retraction Maps} % Main chapter title
-\label{chap:retr} % For referencing the chapter elsewhere, use Chapter~\ref{Chapter1}
+\chapter{Introduction} % Main chapter title
+\label{chap:intro} % For referencing the chapter elsewhere, use Chapter~\ref{Chapter1}
 
 
 %-------------------------------------------------------------------------------
 %---------
 %
-\section{Introduction} 
+\section{Retraction Maps} 
 \label{sec:retr-intro} %For referencing this section elsewhere, use Section~\ref{sec:chap1_introduction}
 
 The notion of a retraction map is fundamental in research areas like optimization theory, machine learning, numerical analysis, and in this context, geometric integrators. \\ Many mechanical systems usually evolve on manifolds, which naturally requires some method of discretely approximating the dynamics on the manifold (i.e., the geodesic). 
@@ -112,7 +112,7 @@ This is useful because typically when studying mechanical systems, we would like
 
 Thus, since discretization maps can be defined on different manifolds, we denote $\D^{TM} : TM \lra M \times M$ as a discretization map on $M$.
 
-\subsection{Tangent Lifts of Discretization Maps}
+\subsection{Tangent Lifts}
 
 Given a smooth map $\varphi: M \lra N$ between two $n$-dimenstional manifolds $M$ and $N$, we can define the \textbf{tangent lift} of $\varphi$ as the map $T\varphi: TM \lra TN$ such that
 
@@ -123,6 +123,7 @@ Given a smooth map $\varphi: M \lra N$ between two $n$-dimenstional manifolds $M
 where $v_x \in T_x M$ and $T_x\varphi$ is the tangent map of $\varphi$, whose matrix is the Jacobian at $x \in M$, in a local chart.
 
 \begin{prop}
+  \label{prop:retr-lift}
 Let $M$ and $N$ be two $n$-dimensional manifolds, and $\varphi: M \lra N$ be a smooth map (diffeomorphism). For a given discretization map $\D^{TM}$ on $M$, the map $\D_{\varphi} :=  (\varphi \times \varphi) \circ \D^{TM} \circ T \varphi ^{-1}$ is a discretization map on $N$ i.e., $\D_{\varphi} \equiv \D^{TN} : TN \lra N \times N$.
 \end{prop}
 
@@ -195,8 +196,8 @@ This can be seen here: Let $(x,v)$ be the canonical coordinates on $TM$, and $(x
 
 \begin{figure}[h]
   \centering
-  \begin{tikzpicture}[transform shape]
-\matrix (m) [matrix of math nodes,row sep=3em,column sep=5em,minimum width=0.1em]
+  \begin{tikzpicture}[scale=0.9, transform shape]
+\matrix (m) [matrix of math nodes,row sep=3em,column sep=5em,minimum width=2em]
 {
    TTM & TM \times TM \\ TTM & T(M \times M) \\ TM & M \times M \\};
 \path[-stealth]
@@ -292,3 +293,95 @@ which yields the tangent lift of $\D$ as:
 We can also obtain the inverse map of $\D^{TTM}$ as 
 
 \[ {\left(\D^{TTM}\right)}^{-1} (x_k, v_k; x_{k+1}, v_{k+1}) = \left( \dfrac{x_k + x_{k+1}}{2}, \dfrac{v_k + v_{k+1}}{2}; x_{k+1} - x_k, v_{k+1} - v_k \right) \]
+
+\section{Generalizing construction of discretization maps}
+
+In Proposition \ref{prop:retr-lift}, we have seen how a discretization map $\D_{\varphi}$ can be constructed on a manifold $N$ given a diffeomorphism $\varphi: M \lra N$ and a discretization map $\D^{TM}$ on $M$. This construction can be extended to $TTN$ as well.
+
+This is useful because, often we deal with \textsl{change of coordinates} in mechanical systems, which may simplify, or attribute more meaning to the system. Hence, if we choose to define a discretization scheme on the new coordinates, we must be able to lift it back to the original manifold.
+
+\begin{figure*}[h]
+  \centering
+  \begin{tikzpicture}[scale=0.75, transform shape]
+\matrix (m) [matrix of math nodes,row sep=3.5em,column sep=3.5em,minimum width=0.1em]
+{
+   TM & TM &  TN & TN \\ TTM & TTM & TTN & TTN \\T(M \times M) & TM \times TM & TN \times TN & T(N \times N) \\ {} & M \times M & N \times N & {} \\};
+\path[-stealth]
+  (m-1-2) edge node [above] {$T\varphi$} (m-1-3)
+  (m-2-2) edge node [above] {$TT\varphi$} (m-2-3)
+  (m-3-2) edge node [above] {$T\varphi \times T\varphi$} (m-3-3)
+  (m-2-1) edge node [left] {$T\tau_M$} (m-1-1)
+  (m-2-2) edge node [left] {$\tau_{TM}$} (m-1-2)
+  (m-2-3) edge node [right] {$\tau_{TN}$} (m-1-3)
+  (m-2-4) edge node [right] {$T\tau_N$} (m-1-4)
+  (m-2-1) edge node [left] {$T\D^{TM}$} (m-3-1)
+  (m-2-2) edge node [left] {$\D^{TTM}$} (m-3-2)
+  (m-2-3) edge node [right] {$\D^{TTN}$} (m-3-3)
+  (m-2-4) edge node [right] {$T\D^{TN}$} (m-3-4)
+  (m-3-2) edge node [left] {$\tau_{M \times M}$} (m-4-2)
+  (m-3-3) edge node [right] {$\tau_{N \times N}$} (m-4-3)
+  (m-4-2) edge node [above] {$\varphi \times \varphi$} (m-4-3);
+\path[<->]
+(m-2-1) edge node [above] {$\kappa_M$} (m-2-2)
+(m-2-3) edge node [above] {$\kappa_N$} (m-2-4);
+\draw[double, double distance=2pt]
+  (m-1-1) -- (m-1-2)
+  (m-1-3) -- (m-1-4)
+  (m-3-1) -- (m-3-2)
+  (m-3-3) -- (m-3-4);
+\draw[->, rounded corners]
+(m-1-1) -- node[pos=1,fill=white,inner sep=0pt]{} ++(-3,0) |- node[above right, inner sep=10pt]{$\D^{TM}$} (m-4-2);
+\draw[->, rounded corners]
+(m-1-4) -- node[pos=1, fill=white, inner sep=0pt]{} ++ (3,0) |- node[above left, inner sep=10pt]{$\D^{TN}$} (m-4-3);
+\end{tikzpicture}
+  \caption{$\D^{TTM}$ and $\D^{TTN}$ commute as shown.}
+  \label{fig:double-comm}
+\end{figure*}
+
+Let $M$ and $N$ be two $n$-dimensional manifolds, and $\varphi: M \lra N$ be a diffeomorphism, which denotes some \textit{change of coordinates}. The questions of importance is the following:
+
+\textit{If we wish to have a discretization map $\D^{TN}$ on $N$, how do we obtain the discretization on the original tangent space $TM$, i.e., $\D^{TTM}$?}
+
+The double commutator in Figure~\ref{fig:double-comm} explains the procedure as follows:
+
+\begin{enumerate}
+  \item Start with a required discretization map $\D^{TN}$ on $N$, and a given $\varphi: M \lra N$.
+  \item Lift it back (refer Fig.~\ref{fig:commutator}) to $TM$ to obtain $\D^{TM}$ using: \[\D^{TM} = (\varphi \times \varphi)^{-1} \circ \D^{TN} \circ T\varphi\] 
+  \item Obtain $D^{TTM}$ by the tangent lift (refer Fig.~\ref{fig:tangent-lift}) of $\D^{TM}$, i.e., \[\D^{TTM} = T\D^{TM} \circ \kappa_M\]
+\end{enumerate}
+
+\textit{Can we construct $\D^{TTM}$ from $\D^{TTN}$?}
+
+\begin{prop}
+  \label{prop:lift-commutator}
+    Let $M$ and $N$ be $n$ dimensional manifolds and $\varphi(x) = \tilde{x}$, where $\varphi$ is a diffeomorphism and $x \in M, \tilde{x} \in N$. Let $TM$ and $TN$ be the tangent bundles of $M$ and $N$, respectively. By definition, if $(x,\dot{x}) \in TM$ and $(\tilde{x}, \dot{\tilde{x}}) \in TN$, then $T\varphi(x,\dot{x}) = (\tilde{x}, \dot{\tilde{x}})$ through the same diffeomorphism. For a given discretization map $\D^{TTM}$ on $TM$, $\D^{TTN} := (T\varphi \times T \varphi) \circ \D^{TTM} \circ TT\varphi^{-1}$ is a discretization map on $TN$ (refer Figure~\ref{fig:double-comm}).
+    
+    \begin{proof}
+        For any given $(\tilde{x}, \dot{\tilde{x}}) \in TN$, we have that:
+        \begin{equation*}
+        \begin{split}
+            \D^{TTN}(\tilde{x}, \dot{\tilde{x}}, 0, 0) & = \left( (T\varphi \times T \varphi) \circ \D^{TTM} \circ TT\varphi^{-1} \right) (\tilde{x}, \dot{\tilde{x}}, 0, 0) \\
+            & =  (T\varphi \times T \varphi) \circ \D^{TTM} (x, \dot{x}, 0, 0) \\
+            & = (T \varphi \times T \varphi) (x, \dot{x}, x, \dot{x}) = (\tilde{x}, \dot{\tilde{x}}, \tilde{x}, \dot{\tilde{x}})
+        \end{split}
+        \end{equation*}
+        which proves the first condition in \eqref{defn:retraction}.
+        
+        Now, for coordinates $(\tilde{x}, \dot{\tilde{x}}, \tilde{y}, \dot{\tilde{y}}) \in TTN$, 
+        \begin{equation*}
+            \begin{split}
+                & (T_{(0_{\tilde{x}}, 0_{\dot{\tilde{x}}})}(T\Ret^2_{\varphi})_{(\tilde{x}, \dot{\tilde{x}})} - T_{(0_{\tilde{x}}, 0_{\dot{\tilde{x}}})} (T\Ret^1_{\varphi})_{(\tilde{x}, \dot{\tilde{x}})})(\tilde{x}, \dot{\tilde{x}}, \tilde{y}, \dot{\tilde{y}}) \\
+                & = \dfrac{d}{ds} \bigg|_{s=0} [(T\varphi \circ (T\Ret^1) \circ TT\varphi^{-1})(\tilde{x}, \dot{\tilde{x}}, s\tilde{y}, s\dot{\tilde{y}}) \\
+                & - (T\varphi \circ (T\Ret^2) \circ TT\varphi^{-1})(\tilde{x}, \dot{\tilde{x}}, s\tilde{y}, s\dot{\tilde{y}})] \\
+                & = T_{(\tilde{x}, \dot{\tilde{x}})}T\varphi \pmat{ \dfrac{d}{ds} \bigg|_{s=0} [(T\Ret^1)(s (TT\varphi^{-1})(\tilde{x},\dot{\tilde{x}}, \tilde{y}, \dot{\tilde{y}})) \\
+                - (T\Ret^2)(s (TT\varphi^{-1})(\tilde{x},\dot{\tilde{x}}, \tilde{y}, \dot{\tilde{y}}))]
+                } \\
+                & = T_{(\tilde{x}, \dot{\tilde{x}})}T\varphi((TT\varphi^{-1})(\tilde{x}, \dot{\tilde{x}}, \tilde{y}, \dot{\tilde{y}})) = (\tilde{x}, \dot{\tilde{x}}, \tilde{y}, \dot{\tilde{y}})
+            \end{split}
+        \end{equation*}
+        which proves the second condition in~\eqref{defn:retraction}.
+
+        Note that $\Ret : TM \lra M \times M$ and $\Ret_{\varphi} : TN \lra N \times N$ are retraction maps on $M$ and $N$ respectively.
+        Thus, using the linearity of the map $TT\varphi$, we prove that $\D^{TTN}$ is indeed a discretization map on $TN$.
+    \end{proof}
+\end{prop}
