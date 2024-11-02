@@ -12,7 +12,7 @@
 
 The notion of a retraction map is fundamental in research areas like optimization theory, machine learning, numerical analysis, and in this context, geometric integrators. \\ Many mechanical systems usually evolve on manifolds, which naturally requires some method of discretely approximating the dynamics on the manifold (i.e., the geodesic). 
 
-In Riemannian geometry, this idea is given by the exponential map. On a Riemannian manifold $(M, g)$, we define $\exp: T_x M \lra M$ as the exponential map at the point $x$. For instance, if  $\gamma: [0, 1] \lra M$ is a unique geodesic on $M$, and $\gamma(0) = x$, then $\exp_x(v) = \gamma(1)$, where $v \in T_x M$ is the initial velocity of the geodesic at $x$ such that $\dot{\gamma}(0) = v$.
+In Riemannian geometry, this idea is given by the exponential map. On a Riemannian manifold $(M, g)$, we define $\exp_x: T_x M \lra M$ as the exponential map at the point $x$. For instance, if  $\gamma: [0, 1] \lra M$ is a unique geodesic on $M$, and $\gamma(0) = x$, then $\exp_x(v) = \gamma(1)$, where $v \in T_x M$ is the initial velocity of the geodesic at $x$ such that $\dot{\gamma}(0) = v$.
 
     \begin{figure}[h]
         \centering
