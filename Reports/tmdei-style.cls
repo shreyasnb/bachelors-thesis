@@ -315,10 +315,10 @@ KOMA-script documentation for details.}]{fancyhdr}
 \newcommand{\dissertationdisclamer}{A project report submitted in partial fulfilment of the \\ requirements for the degree of Bachelor of Technology, Area of}
 \providecaptionname{american,australian,british,canadian,english,newzealand,UKenglish,USenglish}{\dissertationdisclamer}{A project report submitted in partial fulfillment of \\ the requirements for the degree of Bachelor of Technology, Specialisation Area of}
 \providecaptionname{portuguese}{\dissertationdisclamer}{Disserta\c{c}\~ao para obten\c{c}\~ao do Grau de Mestre em \\ Engenharia Inform\'atica, \'Area de Especializa\c{c}\~ao em\\} % Portuguese 
-\newcommand{\supervisorlabel}{Supervisor}
+\newcommand{\supervisorlabel}{Guide}
 \providecaptionname{american,australian,british,canadian,english,newzealand,UKenglish,USenglish}{\supervisorlabel}{Advisor}
 \providecaptionname{portuguese}{\supervisorlabel}{Advisor}
-\newcommand{\cosupervisorlabel}{Co-Advisor}
+\newcommand{\cosupervisorlabel}{Co-Guide}
 \providecaptionname{american,australian,british,canadian,english,newzealand,UKenglish,USenglish}{\cosupervisorlabel}{Co-Advisor}
 \providecaptionname{portuguese}{\cosupervisorlabel}{Co-Advisor}
 \newcommand{\evallabel}{Evaluation Committee}
