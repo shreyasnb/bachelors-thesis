@@ -74,10 +74,14 @@ We define a mechanical control system as proposed in [\cite{10076262}].
     \begin{equation}\label{SODE-initial}
         \ddot{x}^i = - \Gamma ^i_{jk}(x)\dot{x}^j \dot{x}^k + e^i(x) + \sum_{r=1}^m g^i_r(x)u_r
     \end{equation}
+    where $\Gamma^i_{jk}$ are the Christoffel symbols corresponding to the Coriolis and centrifugal forces, $e(x)$ is the uncontrolled vector field, $g_r(x)$ are the controlled vector fields in $Q$.
+
     If we write this as two first-order differential equations:
     \begin{equation}\label{SODE-nonlinear}
-        \dot{x}^i  = y^i; \
-        \dot{y}^i  = - \Gamma^i_{jk}(x)y^jy^k + e^i(x) + \sum_{r=1}^m g_r^i(x)u_r
+        \begin{split}
+            \dot{x}^i  &= y^i; \\
+            \dot{y}^i  &= - \Gamma^i_{jk}(x)y^jy^k + e^i(x) + \sum_{r=1}^m g_r^i(x)u_r
+        \end{split} \tag{$\mathcal{MS}$} 
     \end{equation}
 \end{defn}
 
