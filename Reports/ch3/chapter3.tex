@@ -2,8 +2,38 @@
 
 \section{Introduction}
 
+In this chapter, we will understand the concept of feedback linearization, and its application to mechanical systems, which gives rise to an interesting class of \textbf{Mechanically Feedback Linearizable} systems.
+
+\section{Feedback Linearization}
+
 Feedback linearization is a control technique used to transform a nonlinear system into an equivalent linear system through a change of variables and a suitable feedback control law. This method allows the application of linear control techniques to nonlinear systems, which can simplify the design and analysis of control systems.
 
+Consider the following continuous-time dynamical system (for $t \in [0, T ], T > 0$):
+
+\begin{equation}
+    \label{eq:cts}
+    \dfrac{d}{dt}x(t) = X(x(t), u(t))
+\end{equation}
+
+on an $n$-dimensional manifold $M$, where $X(\cdot, u) \in \mathfrak{X}(M)$ is a vector field, for each $u \in U \subset \R[n]$. A point $(x_0, u_0) \in M \times U$ is called an equilibrium point of the system~\eqref{eq:cts} if $X(x_0, u_0) = 0$.
+
+\begin{defn}
+    Let $M$ and $N$ be two $n$-dimensional manifolds and $\varphi: M \lra N$ be a diffeomorphism. Let $X \in \mathfrak{X}(M)$ be a vector field on $M$. Then, $X_{\varphi} = T\varphi \circ X \circ \varphi^{-1}$ is a vector field on $N$ (push-forward) for the dynamical system
+    \begin{equation}
+        \dfrac{d}{dt}\tilde{x}(t) = X_{\varphi}(\tilde{x}(t), u(t))
+    \end{equation}
+    with $\tilde{x}(0) = \varphi(x(0))$ satisfying $\tilde{x}(t) = \varphi(x(t)), t \in [0,T]$.
+
+    Let $x \in \mathcal{O}(x_0)$ and $u \in \mathcal{O}(u_0)$ be open balls (neighborhood) around $x_0$ and $u_0$ in $M$ and $U$ respectively. Let $x \mapsto \varphi(x) = \tilde{x} \in N : = \R[n]$ be a diffeomorphism, and $(x,u) \mapsto \psi(x,u) : = v \in \R[m]$ such that for each fixed $x$, $\psi(x, \cdot) : U \lra \R[n]$ is invertible. Thus, a dynamical system \eqref{eq:cts} is said to be (locally) feedback linearizable around $(x_0, u_0)$ on $\mathcal{O}(x_0) \times \mathcal{O}(u_0)$ if there exists matrices $A \in \R[n \times n]$ and $B \in \R[n \times m]$ such that $X_{\varphi}(\tilde{x}, v) = A \tilde{x} + Bv$, with $v = \psi(\varphi^{-1}(\tilde{x}), u)$. The feedback linearized dynamical system is given by:
+
+    \begin{equation}
+        \dfrac{d}{dt}\tilde{x}(t) = A \tilde{x}(t) + B v(t)
+    \end{equation}
+\end{defn}
+
+
+
+\section{Mechanical Feedback Linearization}
 Mechanical Feedback Linearization (MF-Linearization) is given defined as:
 
 \begin{itemize}
