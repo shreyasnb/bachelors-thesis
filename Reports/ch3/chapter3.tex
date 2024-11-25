@@ -2,7 +2,9 @@
 
 \section{Introduction}
 
-In this chapter, we will understand the concept of feedback linearization, and its application to mechanical systems, which gives rise to an interesting class of \textbf{Mechanically Feedback Linearizable} systems.
+Feedback linearization has been successfully applied to a wide range of nonlinear systems, including robotic manipulators, aerospace vehicles, and chemical processes. It provides a systematic approach to control design and can significantly improve the performance and stability of nonlinear systems.
+
+In the following sections, we will explore the mathematical foundations of feedback linearization, discuss its application to various systems, and present examples to illustrate its effectiveness. We will also look at an interesting class of systems called \textbf{Mechanically Feedback Linearizable} systems, which can be controlled using feedback linearization techniques.
 
 \section{Feedback Linearization}
 
@@ -31,33 +33,83 @@ on an $n$-dimensional manifold $M$, where $X(\cdot, u) \in \mathfrak{X}(M)$ is a
     \end{equation}
 \end{defn}
 
+\subsection{Example}
+
+Consider the following continuous-time dynamical system:
+    \begin{equation}
+        \pmat{\dot{x}_1 \\ \dot{x}_2} = \pmat{(1+2u(t))x_2(t) \\ u(t)}
+    \end{equation}
+
+Taking $\tilde{x}_1 = x_1 - x_2^2$ and $\tilde{x}_2 = x_2$, we get the diffeomorphism $\varphi(x_1, x_2) = \left(x_1 - x_2^2, x_2 \right)$, we get the feedback linearized system:
+
+\begin{equation}
+    \pmat{\dot{z}_1(t) \\ \dot{z}_2(t)} = \pmat{z_2(t) \\ u(t)}
+\end{equation}
+
+\subsection{Discrete Feedback Linearization}
+
+Let's take a detour and check if a discretized system is feedback linearizable. Consider the same example as above.
+
+First, we consider the forward Euler discretization scheme $\D(x, v) = (x, x + v)$. This gives a discrete-time system:
+
+\begin{equation}
+    \pmat{x_{1,k+1} \\ x_{2, k+1}} = \pmat{x_{1,k} \\ x_{2,k}} + h\pmat{(1+2u_k)x_{2,k} \\ u_k}
+\end{equation}
+
+Taking the same diffeomorphism $\varphi$ as before, we get:
+
+\begin{equation}
+    \pmat{z_{1,k+1} \\ z_{2,k+1}} = \pmat{z_{1,k} + hz_{2,k} - h^2 u_k^2 \\ z_{2,k} + h u_k}
+\end{equation}
+
+Thus, we see that it is NOT feedback linearizable.
+
+Now, let's consider an alternate discretization which yields the discrete system:
+
+\begin{equation}
+    \pmat{x_{1,k+1} \\ x_{2, k+1}} = \pmat{x_{1,k} \\ x_{2,k}} + h\pmat{(1+2u_k)x_{2,k} \\ u_k} + h^2 \pmat{u_k^2 \\ 0}
+\end{equation}
+
+Again taking the same diffeomorphism $\varphi$, we get:
+
+\begin{equation}
+    \pmat{z_{1,k+1} \\ z_{2,k+1}} = \pmat{z_{1,k} + hz_{2,k} \\ z_{2,k} + h u_k}
+\end{equation}
+
+which is indeed feedback linearizable.
+
+Thus, we see that the choice of discretization scheme can affect the feedback linearizability of a system.
+
+
+\section{Feedback Linearizable Discretization}
+
+As seen from above, the following question persists: \textsl{Given a feedback linearizable continuous-time system, is it possible to construct a numerical discretization which is also feedback linearizable?}
+
+Yes. We can do this by using the notion of lifts of discretization maps, since the feedback linearization is a diffeomorphism. Invoking the proposition~\eqref{prop:retr-lift}, we can construct a discretization scheme:
+
+\begin{equation}
+    \left(\D^{TM}\right)^{-1}(x_k, x_{k+1}) = hX \left( \tau_M \left( \left( \D^{TM} \right)^{-1} \left( x_k, x_{k+1}\right), u_k  \right) \right) 
+\end{equation}
+
+This allows us to define a scheme on $TM$ for a choice of discretization on $TN$, and a given change of coordinates $\varphi$ via feedback linearization.
 
 
 \section{Mechanical Feedback Linearization}
-Mechanical Feedback Linearization (MF-Linearization) is given defined as:
+Mechanical Feedback Linearization (MF-Linearization) is the application of feedback linearization to nonlinear mechanical systems. Mechanical systems usually evolve on a configuration manifold $M$, hence feedback linearization would usually not yield a linear system (due to the affine connection). However, there exists a class of mechanical systems -- called the \textbf{MF-Linearizable} systems, for which direct feedback linearization is possible.
 
-\begin{itemize}
-    \item change of coordinates given by the diffeomorphism
+\begin{defn}
+    A mechanical control system $(\mathcal{MS})_{(n,m)} = (M, \nabla, \mathfrak{g}, e)$ is called $MF$-linearizable if it is $MF$-equivalent to a linear mechanical system $(\mathcal{LMS})_{(n,m)} = (\R[n], \overline{\nabla}, \mathfrak{b}, A \widetilde{x})$, where $\overline{\nabla}$ is an affine connection with the Christoffel symbols zero ($\overline{\nabla}$ is a flat connection) and $\mathfrak{b} = \{b_1, \dots, b_m \}$ are constant vector fields. In other words, there exists $(\varphi, \alpha, \beta, \gamma) \in MF$ such that 
     \begin{equation}
         \begin{split}
-            \varPhi: & TM \lra T\widetilde{M} \\
-            & (x,v) \mapsto (\tilde{x}, \tilde{v}) = (\varphi(x), D \varphi(x)v)
+            \varphi: M \lra N \ \ \varphi(x)  &= \widetilde{x} \\
+            \varphi_*\left(\nabla - \sum_{r=1}^m g_r \otimes \gamma^r\right) &= \overline{\nabla} \\
+            \varphi_*\left( \sum_{r=1}^m \beta^r_s g_r \right) &= b_s, \ 1 \leq s \leq m \\
+            \varphi_* \left( e + \sum_{r=1}^m g_r \alpha^r \right) &= A \widetilde{x}
         \end{split}
     \end{equation}
-    \item mechanical feedback transformations, denoted $(\alpha, \beta, \gamma)$, of the form
-    \begin{equation}
-        u_r = \gamma^r_{jk}(x) y^j y^k + \alpha^r (x) + \sum_{s=1}^m \beta^r_s(x) \tilde{u}_s
+    Equivalently, we have the corresponding linear mechanical system $(\mathcal{LMS})_{(n,m)}$ as:
+    \begin{equation}\label{sode-lin}
+            \dot{\tilde{x}}  = \tilde{y}; \ 
+            \dot{\tilde{y}}  = A \tilde{x} + \sum_{s=1}^m b_s \tilde{u}_s
     \end{equation}
-    where $\gamma^r_{jk} = \gamma^r_{kj}$
-\end{itemize}
-such that the transformed system is linear and mechanical:
-\begin{equation}
-    \begin{split}
-        \dot{\tilde{x}}^i & = \tilde{v}^i \\
-        \dot{\tilde{v}}^i & = E^i_j \tilde{x}^j + \sum_{s=1}^m b_s^i \tilde{u}_s
-    \end{split} \tag{$\mathcal{LMS}$}
-\end{equation}
-
-Feedback linearization has been successfully applied to a wide range of nonlinear systems, including robotic manipulators, aerospace vehicles, and chemical processes. It provides a systematic approach to control design and can significantly improve the performance and stability of nonlinear systems.
-
-In the following sections, we will explore the mathematical foundations of feedback linearization, discuss its application to various systems, and present examples to illustrate its effectiveness.
+\end{defn}
