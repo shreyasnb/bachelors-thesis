@@ -66,18 +66,26 @@ Here, the first property is trivial, whereas the second property is known as the
 A map $\D : U \subset TM \lra M \times M$ given by 
 
 \[
-  \D (x,v) = \left( \Ret^1_x(v), \Ret^2_x(v) \right)
+  \D (x,v) = \left( R^1_x(v), R^2_x(v) \right)
 \]
 
 where $U$ is the open neighborhood of the zero section $0_x \in TM$, is called a \textbf{discretization map} on $M$, if the following properties are satisfied:
 
 \begin{enumerate}
   \item $\D(x,0_x) = (x,x)$ 
-  \item $T_{0_x}\Ret_x^2 - T_{0_x}\Ret_x^1 = \mathbb{I}_{T_x M}$, which is the identity map on $T_x M$ for any $x \in M$.
+  \item $T_{0_x}R_x^2 - T_{0_x}R_x^1 = \mathbb{I}_{T_x M}$, which is the identity map on $T_x M$ for any $x \in M$.
 \end{enumerate}
 \end{defn}
 
 Using this definition, one can prove (not included here) that the discretization map $\D$ is a local diffeomorphism around the zero section $0_x \in TM$. This is a crucial property for the construction of geometric integrators, since we need to be able to define $\D^{-1} (x_k, x_{k+1})$.
+
+\begin{rmk}
+  Note that $R^i_x : T_x M \lra M$ here, is \textbf{not} a retraction map $\Ret_x$ in general.
+\end{rmk}
+
+\begin{rmk}
+  The discretization map $\D$ actually takes a \textbf{single} element $(x,v) \in TM$ and maps it to a pair of elements $(x_k , x_{k+1}) \in M \times M$.
+\end{rmk}
 
 Thus, given a vector field $X \in \mathfrak{X}(M)$ on $M$, i.e., $X: M \lra TM$ such that $\tau_M \circ X = \mathbb{I}_M$, where $\tau_M: TM \lra M$ is the canonical projection on the tangent bundle, we can approximate the integral curve by the following first-order discrete equation:
 
@@ -88,7 +96,7 @@ Thus, given a vector field $X \in \mathfrak{X}(M)$ on $M$, i.e., $X: M \lra TM$ 
 Hence, given an initial condition $x_0$, we may be able to solve the discrete equation iteratively to obtain the sequence $\{x_k\}$ which is indeed an approximation of $\{x(kh)\}$, where $x(t)$ is the integral curve of $X$ with initial condition $x_0$ and time-step $h$.
 
 \subsection{Examples}
-We consider a few examples of discretization maps on $\R[n]$:
+We consider a few examples of discretization maps on $\R[n]$ [for $\dot{x}(t) = X(x(t))$]:
 
 \begin{table}[h]
 \centering
@@ -142,9 +150,9 @@ Let $M$ and $N$ be two $n$-dimensional manifolds, and $\varphi: M \lra N$ be a s
   which proves the first condition. For the second condition, let $v_y \in T_y N$, be a given vector.
   \begin{equation*}
     \begin{split}
-      (T_{0_x} \Ret_{x, \varphi}^2 - & T_{0_x} \Ret_{x, \varphi}^1 )(y, u_y) = \dfrac{d}{ds} \bigg{|}_{s=0} \left( \Ret_{x, \varphi}^2 (y, su_y) - \Ret_{x, \varphi}^1 (y, su_y) \right) \\
-      &= \dfrac{d}{ds} \bigg{|}_{s=0} \left(\varphi \circ \Ret^1_x \circ T\varphi^{-1} (y, su_y) \right) -  \left( \varphi \circ \Ret^2_x \circ T \varphi^{-1}(y, su_y) \right) \\
-      &= T_y \varphi \left( \dfrac{d}{ds} \bigg{|}_{s=0} \left[ \Ret^1_x(t(T\varphi^{-1} (y, u_y))) \right] - \left[ \Ret^2_x(t(T\varphi^{-1} (y, u_y))) \right] \right) \\
+      (T_{0_x} R_{x, \varphi}^2 - & T_{0_x} R_{x, \varphi}^1 )(y, u_y) = \dfrac{d}{ds} \bigg{|}_{s=0} \left( R_{x, \varphi}^2 (y, su_y) - R_{x, \varphi}^1 (y, su_y) \right) \\
+      &= \dfrac{d}{ds} \bigg{|}_{s=0} \left(\varphi \circ R^1_x \circ T\varphi^{-1} (y, su_y) \right) -  \left( \varphi \circ R^2_x \circ T \varphi^{-1}(y, su_y) \right) \\
+      &= T_y \varphi \left( \dfrac{d}{ds} \bigg{|}_{s=0} \left[ R^1_x(t(T\varphi^{-1} (y, u_y))) \right] - \left[ R^2_x(t(T\varphi^{-1} (y, u_y))) \right] \right) \\
       &= T_y \varphi (T_y \varphi^{-1} (y, u_y)) = (y, u_y)
     \end{split}
   \end{equation*}
@@ -242,30 +250,30 @@ Using the above construction, we can now define the tangent lift of a discretiza
        
       where we trivially identify $T(M \times M) \equiv TM \times TM$.
       \item For the rigidity property, we know that
-      \[\D^{TTM}(x, \dot{x}, v, \dot{v}) = \left({(T\Ret^1)}_{(x,\dot{x})}(v, \dot{v}), {(T\Ret^2)}_{(x,\dot{x})}(v, \dot{v}) \right)\]
+      \[\D^{TTM}(x, \dot{x}, v, \dot{v}) = \left({(TR^1)}_{(x,\dot{x})}(v, \dot{v}), {(TR^2)}_{(x,\dot{x})}(v, \dot{v}) \right)\]
       So, we need to compute 
-      \[T_{{(0,0)}_{(x,\dot{x})}}{(T\Ret^a)}_{(x, \dot{x})}(x, \dot{x}) : T_{(x, \dot{x})}TM \lra T_{(x, \dot{x})}TM\]
-      for $a=1,2$, to prove that the map ${T(T\Ret^2)}_{(x,\dot{x})} - T(T\Ret^1)_{(x, \dot{x})}$ is the identity map at the zero section $(0,0)_{(x,\dot{x})}$, from $T_{(x, \dot{x})} TM$ to itself.
+      \[T_{{(0,0)}_{(x,\dot{x})}}{(TR^a)}_{(x, \dot{x})}(x, \dot{x}) : T_{(x, \dot{x})}TM \lra T_{(x, \dot{x})}TM\]
+      for $a=1,2$, to prove that the map ${T(TR^2)}_{(x,\dot{x})} - T(TR^1)_{(x, \dot{x})}$ is the identity map at the zero section $(0,0)_{(x,\dot{x})}$, from $T_{(x, \dot{x})} TM$ to itself.
 
       We can calculate 
-          \[\dfrac{d}{ds}\bigg|_{s=0} \left( \Ret^a_x( sv), \partial_{x} \Ret^a_x(sv) \dot{x} + \partial_v \Ret^a_x(sv) s \dot{v} \right)\]
+          \[\dfrac{d}{ds}\bigg|_{s=0} \left( R^a_x( sv), \partial_{x} R^a_x(sv) \dot{x} + \partial_v R^a_x(sv) s \dot{v} \right)\]
       
-      At $(x, \dot{x}, 0, 0)$, the map $T_{(0,0)_{(x, \dot{x})}}(T\Ret^a)_{(x, \dot{x})}$ is thus given by:
+      At $(x, \dot{x}, 0, 0)$, the map $T_{(0,0)_{(x, \dot{x})}}(TR^a)_{(x, \dot{x})}$ is thus given by:
       \[\pmat{
-      \partial_{v^j}(\Ret^a)^i(x, 0) & 0 \\
-      \partial_{x^k} \partial_{v^j} (\Ret^a)^i(x,0) \dot{x}^k & \partial_{v^j}(\Ret^a)^i(x,0)
+      \partial_{v^j}(R^a)^i(x, 0) & 0 \\
+      \partial_{x^k} \partial_{v^j} (R^a)^i(x,0) \dot{x}^k & \partial_{v^j}(R^a)^i(x,0)
       }\]
       
       \vspace{-1mm}
-      Thus, using the properties of the discretization map $\D$, we have the Jacobian matrix of $(T\Ret^2)_{(x, \dot{x})} - (T\Ret^1)_{(x, \dot{x})}$ at $(0,0)_{(x, \dot{x})}$ as:
+      Thus, using the properties of the discretization map $\D$, we have the Jacobian matrix of $(TR^2)_{(x, \dot{x})} - (TR^1)_{(x, \dot{x})}$ at $(0,0)_{(x, \dot{x})}$ as:
       \[\pmat{
-      \partial_{v}(\Ret^2-\Ret^1)(x,0) & 0 \\
-      \partial_x(\partial_v(\Ret^2 - \Ret^1)(x,0))\dot{x} & \partial_v (\Ret^2-\Ret^1)(x,0)
+      \partial_{v}(R^2-R^1)(x,0) & 0 \\
+      \partial_x(\partial_v(R^2 - R^1)(x,0))\dot{x} & \partial_v (R^2-R^1)(x,0)
       } = \mathbb{I}_{2n \times 2n}
       \]
 
       \vspace{-1mm}
-      since $\partial_v (\Ret^2-\Ret^1)(x,0) = \mathbb{I}_{n \times n}$ which also implies $\partial_x(\partial_v(\Ret^2 - \Ret^1))(x,0) = 0$
+      since $\partial_v (R^2-R^1)(x,0) = \mathbb{I}_{n \times n}$ which also implies $\partial_x(\partial_v(R^2 - R^1))(x,0) = 0$
   \end{enumerate}
 \end{proof}
 
@@ -370,18 +378,18 @@ The double commutator in Figure~\ref{fig:double-comm} explains the procedure as 
         Now, for coordinates $(\tilde{x}, \dot{\tilde{x}}, \tilde{y}, \dot{\tilde{y}}) \in TTN$, 
         \begin{equation*}
             \begin{split}
-                & (T_{(0_{\tilde{x}}, 0_{\dot{\tilde{x}}})}(T\Ret^2_{\varphi})_{(\tilde{x}, \dot{\tilde{x}})} - T_{(0_{\tilde{x}}, 0_{\dot{\tilde{x}}})} (T\Ret^1_{\varphi})_{(\tilde{x}, \dot{\tilde{x}})})(\tilde{x}, \dot{\tilde{x}}, \tilde{y}, \dot{\tilde{y}}) \\
-                & = \dfrac{d}{ds} \bigg|_{s=0} [(T\varphi \circ (T\Ret^1) \circ TT\varphi^{-1})(\tilde{x}, \dot{\tilde{x}}, s\tilde{y}, s\dot{\tilde{y}}) \\
-                & - (T\varphi \circ (T\Ret^2) \circ TT\varphi^{-1})(\tilde{x}, \dot{\tilde{x}}, s\tilde{y}, s\dot{\tilde{y}})] \\
-                & = T_{(\tilde{x}, \dot{\tilde{x}})}T\varphi \pmat{ \dfrac{d}{ds} \bigg|_{s=0} [(T\Ret^1)(s (TT\varphi^{-1})(\tilde{x},\dot{\tilde{x}}, \tilde{y}, \dot{\tilde{y}})) \\
-                - (T\Ret^2)(s (TT\varphi^{-1})(\tilde{x},\dot{\tilde{x}}, \tilde{y}, \dot{\tilde{y}}))]
+                & (T_{(0_{\tilde{x}}, 0_{\dot{\tilde{x}}})}(TR^2_{\varphi})_{(\tilde{x}, \dot{\tilde{x}})} - T_{(0_{\tilde{x}}, 0_{\dot{\tilde{x}}})} (TR^1_{\varphi})_{(\tilde{x}, \dot{\tilde{x}})})(\tilde{x}, \dot{\tilde{x}}, \tilde{y}, \dot{\tilde{y}}) \\
+                & = \dfrac{d}{ds} \bigg|_{s=0} [(T\varphi \circ (TR^1) \circ TT\varphi^{-1})(\tilde{x}, \dot{\tilde{x}}, s\tilde{y}, s\dot{\tilde{y}}) \\
+                & - (T\varphi \circ (TR^2) \circ TT\varphi^{-1})(\tilde{x}, \dot{\tilde{x}}, s\tilde{y}, s\dot{\tilde{y}})] \\
+                & = T_{(\tilde{x}, \dot{\tilde{x}})}T\varphi \pmat{ \dfrac{d}{ds} \bigg|_{s=0} [(TR^1)(s (TT\varphi^{-1})(\tilde{x},\dot{\tilde{x}}, \tilde{y}, \dot{\tilde{y}})) \\
+                - (TR^2)(s (TT\varphi^{-1})(\tilde{x},\dot{\tilde{x}}, \tilde{y}, \dot{\tilde{y}}))]
                 } \\
                 & = T_{(\tilde{x}, \dot{\tilde{x}})}T\varphi((TT\varphi^{-1})(\tilde{x}, \dot{\tilde{x}}, \tilde{y}, \dot{\tilde{y}})) = (\tilde{x}, \dot{\tilde{x}}, \tilde{y}, \dot{\tilde{y}})
             \end{split}
         \end{equation*}
         which proves the second condition in~\eqref{defn:retraction}.
 
-        Note that $\Ret : TM \lra M \times M$ and $\Ret_{\varphi} : TN \lra N \times N$ are retraction maps on $M$ and $N$ respectively.
+        Note that $R : TM \lra M \times M$ and $R_{\varphi} : TN \lra N \times N$ are retraction maps on $M$ and $N$ respectively.
         Thus, using the linearity of the map $TT\varphi$, we prove that $\D^{TTN}$ is indeed a discretization map on $TN$.
     \end{proof}
 \end{prop}
