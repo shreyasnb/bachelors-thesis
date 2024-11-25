@@ -91,11 +91,17 @@ Yes. We can do this by using the notion of lifts of discretization maps, since t
     \left(\D^{TM}\right)^{-1}(x_k, x_{k+1}) = hX \left( \tau_M \left( \left( \D^{TM} \right)^{-1} \left( x_k, x_{k+1}\right), u_k  \right) \right) 
 \end{equation}
 
+\begin{equation}
+    \D^{TN} = (T\varphi \times T \varphi)^{-1} \circ \D^{TM} \circ TT \varphi
+\end{equation}
+
 This allows us to define a scheme on $TM$ for a choice of discretization on $TN$, and a given change of coordinates $\varphi$ via feedback linearization.
 
 
 \section{Mechanical Feedback Linearization}
-Mechanical Feedback Linearization (MF-Linearization) is the application of feedback linearization to nonlinear mechanical systems. Mechanical systems usually evolve on a configuration manifold $M$, hence feedback linearization would usually not yield a linear system (due to the affine connection). However, there exists a class of mechanical systems -- called the \textbf{MF-Linearizable} systems, for which direct feedback linearization is possible.
+Mechanical Feedback Linearization (MF-Linearization) is the application of feedback linearization to nonlinear mechanical systems. Mechanical systems usually evolve on a configuration manifold $M$, hence feedback linearization would usually not yield a linear system which preserves the mechanical structure (due to the affine connection). 
+
+However, there exists a class of mechanical systems, called the \textbf{MF-Linearizable} systems, for which feedback linearization is possible:
 
 \begin{defn}
     A mechanical control system $(\mathcal{MS})_{(n,m)} = (M, \nabla, \mathfrak{g}, e)$ is called $MF$-linearizable if it is $MF$-equivalent to a linear mechanical system $(\mathcal{LMS})_{(n,m)} = (\R[n], \overline{\nabla}, \mathfrak{b}, A \widetilde{x})$, where $\overline{\nabla}$ is an affine connection with the Christoffel symbols zero ($\overline{\nabla}$ is a flat connection) and $\mathfrak{b} = \{b_1, \dots, b_m \}$ are constant vector fields. In other words, there exists $(\varphi, \alpha, \beta, \gamma) \in MF$ such that 
@@ -113,3 +119,47 @@ Mechanical Feedback Linearization (MF-Linearization) is the application of feedb
             \dot{\tilde{y}}  = A \tilde{x} + \sum_{s=1}^m b_s \tilde{u}_s
     \end{equation}
 \end{defn}
+
+
+\subsection{Determining MF-Linearizability}
+
+\textsl{Given a mechanical system, how do we determine if it falls under the class of mechanically feedback linearizable systems?}
+
+From the definition in~\eqref{eq:mech}, we can define the following distributions:
+
+\begin{equation}
+    \begin{split}
+        \mathcal{E}^0 & = \text{span} \{ g_r, 1 \leq r \leq m \} \\
+        \mathcal{E}^j & = \text{span} \{ \text{ad}^i_e g_r, 1 \leq r \leq m, 0 \leq i \leq j \}
+    \end{split}
+\end{equation}
+
+Thus, we state the following theorem:
+\begin{thm}\label{thm:mfl}
+    A mechanical system $(\mathcal{MS})_{(n,m)}$ is said to be mechanical feedback ($MF$) linearizable, locally around $x_0 \in M$ if and only if, in the neighborhood of $x_0$, it satisfies the following conditions:
+
+    \begin{itemize}
+        \item $(ML1)$ $\mathcal{E}^0$ and $\mathcal{E}^1$ are of constant rank
+        \item $(ML2)$ $\mathcal{E}^0$ is involutive
+        \item $(ML3)$ $\text{ann } \mathcal{E}^{0} \subset \text{ann } \mathfrak{R}$
+        \item $(ML4)$ $\text{ann } \mathcal{E}^0 \subset \text{ann } \nabla g_r \ \forall r: 1 \leq r \leq m$
+        \item $(ML5)$ $\text{ann } \mathcal{E}^1 \subset \text{ann } \nabla^2 e$
+    \end{itemize}
+where $\mathfrak{R}$ is the Riemannian curvature tensor and $\text{ann}$ is the annihilator.
+\end{thm}
+
+\begin{rmk}
+    The above conditions $(ML1)$--$(ML5)$ are valid without the assumption of controllability of the linearized mechanical system
+\end{rmk}
+
+We can also define the feedback linearization for different classes of mechanical systems. The following proposition is explicitly stated for planar mechanical systems where $n=2$. (refer~\cite{nowicki}).
+
+\begin{prop}
+\label{prop:planar_mech}
+A planar mechanical system $\mathcal{(MS)}_{(2,1)}$ is locally $MF$-linearizable at $x_0 \in M$ to a controllable $\mathcal{(LMS)}_{(2,1)}$, if and only if it satisfies the following conditions:
+\begin{enumerate}
+    \item $(MD1)$ $g$ and $\text{ ad}_e g$ are independent
+    \item $(MD2)$ $\nabla_g g \in \mathcal{E}^0$ and $\nabla_{\text{ad}_e g} g \in \mathcal{E}^0$
+    \item $(MD3)$ $\nabla^2_{g, \text{ad}_e g} \text{ad}_e g - \nabla^2_{\text{ad}_e g, g} \text{ad}_e g \in \mathcal{E}^0$
+\end{enumerate}
+\end{prop}
