@@ -8,20 +8,20 @@ Mechanical systems are usually described by nonlinear second-order differential 
 
 %----------------------------------------------------------------------------------------
 \section{Second-order differential equations (SODEs)} 
-Let $x \in M$ and $(x, \dot{x}) \in TM$ be the coordinates on the manifold $M$ and the induced coordinates on the tangent bundle of $M$, respectively. We know that a second-order differential equation is a vector field $\Gamma$ such that $\tau_{TM}(X) = T \tau_M (X)$. This implies that the vector field $X$ on $TM$ is a section of the second-order tangent bundle $TTM$. Locally, if we take coordinates $(x^i)$ on $M$ and induced coordinates $(x^i, \dot{x}^i)$ on $TM$, then:
+Let $x \in M$ and $(x, \dot{x}) \in TM$ be the coordinates on the manifold $M$ and the induced coordinates on the tangent bundle of $M$, respectively. We know that a second-order differential equation is a vector field $X$ such that $\tau_{TM}(X) = T \tau_M (X)$. This implies that the vector field $X$ on $TM$ is a section of the second-order tangent bundle $TTM$. Locally, if we take coordinates $(x^i)$ on $M$ and induced coordinates $(x^i, \dot{x}^i)$ on $TM$, then:
 \begin{equation}
-    \Gamma = \dot{x}^i \frac{\partial}{\partial x^i} + \Gamma^i(x^i, \dot{x}^i) \frac{\partial}{\partial \dot{x}^i}
+    X = \dot{x}^i \frac{\partial}{\partial x^i} + X^i(x^i, \dot{x}^i) \frac{\partial}{\partial \dot{x}^i}
 \end{equation}
 To find the integral curves of $X$ is equivalent to solving the SODE:
 \begin{equation}
 \label{eq:sode}
-    \dfrac{d^2}{dt^2}x(t) = \Gamma \left( x(t), \dfrac{d}{dt}x(t) \right) 
+    \dfrac{d^2}{dt^2}x(t) = X \left( x(t), \dfrac{d}{dt}x(t) \right) 
 \end{equation}
 Now, we wish to discretize this using the notion of the discretization map on $TM$. We would like to tangently lift a discretization on $M$ to obtain $\D^{TTM}: TTM \lra TM \times TM$ as defined in Proposition \ref{prop:lift-commutator}. This yields the following numerical scheme [\cite{21MBLDMdD}]:
 \begin{equation}
 \label{eq:disc}
 \begin{split}
-    h \Gamma \left( \left(\tau_{TM} \circ \left(\D^{TTM}\right)^{-1}\right)(x_k, y_k; x_{k+1}, y_{k+1})\right) \\ = \left(\D^{TTM}\right)^{-1} (x_k, y_k; x_{k+1}, y_{k+1})
+    h X \left( \left(\tau_{TM} \circ \left(\D^{TTM}\right)^{-1}\right)(x_k, y_k; x_{k+1}, y_{k+1})\right) \\ = \left(\D^{TTM}\right)^{-1} (x_k, y_k; x_{k+1}, y_{k+1})
 \end{split}
 \end{equation}
 
@@ -49,7 +49,7 @@ Now, to lift $\D^{TTN}$ to obtain $\D^{TTM}$, we use Proposition \ref{prop:lift-
  \begin{equation}
      \begin{split}
          \dfrac{x_{k+1} - x_k}{h} & = \dfrac{y_{k+1} + y_k}{2}, \\
-         \dfrac{y_{k+1} - y_k}{h} & = \Gamma \left(\dfrac{x_k + x_{k+1}}{2}, \dfrac{y_k + y_{k+1}}{2} \right)
+         \dfrac{y_{k+1} - y_k}{h} & = X \left(\dfrac{x_k + x_{k+1}}{2}, \dfrac{y_k + y_{k+1}}{2} \right)
      \end{split}
  \end{equation}
  which is the numerical scheme for a symmetric discretization of the SODE \eqref{eq:sode}.
@@ -68,6 +68,7 @@ We define a mechanical control system as proposed in [\cite{10076262}].
     \end{itemize}
     $(\mathcal{MS})_{(n,m)}$ can be represented by the differential equation:
     \begin{equation}
+        \label{eq:mech}
         \nabla_{\dot{x}} \dot{x} = e(x) + \sum_{r=1}^m g_r(x) u_r 
     \end{equation}
     Or equivalently in local coordinates $x = (x^1, \dots, x^n)$ on $M$, 
@@ -172,3 +173,5 @@ where, for $\eta = \dfrac{3}{ml^2 \left(4(M + m) - 3m \cos^2{\theta} \right)}$ w
 \end{equation*}
 
 Thus, this system in \eqref{eq:mech-ex} is in the form of a mechanical control system \eqref{SODE-nonlinear}.
+
+It is be interesting to note that this system is mechanically feedback linearizable only if the input is given to the pendulum (as torque) and not the cart!
