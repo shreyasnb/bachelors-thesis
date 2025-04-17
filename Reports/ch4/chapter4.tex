@@ -207,10 +207,10 @@ The comparison results between the proposed discretization scheme and ODE45 for 
           axis y line* = left,
           legend style={at={(0.61,0.97)}}
         ]
-        \addplot[mark=none, red, ultra thick] table[x=t,y=theta1, col sep=comma]{../Data/states_original.csv};
+        \addplot[mark=none, red, ultra thick] table[x=t,y=theta1, col sep=comma]{../Data/inertia_pendulum/states_original.csv};
         \addlegendentry{$\theta_{1,k}$}
         \addplot [mark=none, black, dashed, ultra thick]
-        table[x=t,y=theta1,col sep=comma]{../Data/states_ode45.csv}; 
+        table[x=t,y=theta1,col sep=comma]{../Data/inertia_pendulum/states_ode45.csv}; 
         \addlegendentry{$\theta_1(t_k)$}
       \end{axis}
     \begin{axis}[
@@ -223,10 +223,10 @@ The comparison results between the proposed discretization scheme and ODE45 for 
           axis y line* = right,
           legend pos=north east
         ]
-        \addplot[mark=none, blue, ultra thick] table[x=t,y=theta2, col sep=comma]{../Data/states_original.csv};
+        \addplot[mark=none, blue, ultra thick] table[x=t,y=theta2, col sep=comma]{../Data/inertia_pendulum/states_original.csv};
         \addlegendentry{$\theta_{2,k}$}
         \addplot [mark=none, green, dashed, ultra thick]
-        table[x=t,y=theta2,col sep=comma]{../Data/states_ode45.csv};
+        table[x=t,y=theta2,col sep=comma]{../Data/inertia_pendulum/states_ode45.csv};
         \addlegendentry{$\theta_2(t_k)$}
       \end{axis}  
     \end{tikzpicture}
@@ -248,7 +248,7 @@ The comparison results between the proposed discretization scheme and ODE45 for 
             axis y line* = left,
             legend pos=north east
           ]
-          \addplot[mark=none, blue, thick] table[x=t,y=e1, col sep=comma]{../Data/error_norms.csv};
+          \addplot[mark=none, blue, thick] table[x=t,y=e1, col sep=comma]{../Data/inertia_pendulum/error_norms.csv};
           \addlegendentry{$\lVert \theta_{1,k}-\theta_1(t_k) \rVert$}
         \end{axis}  
         \begin{axis}[
@@ -261,7 +261,7 @@ The comparison results between the proposed discretization scheme and ODE45 for 
             axis y line* = right,
             legend style={at={(0.97,0.77)}}
           ]
-          \addplot[mark=none, red, thick] table[x=t,y=ed1, col sep=comma]{../Data/error_norms.csv};
+          \addplot[mark=none, red, thick] table[x=t,y=ed1, col sep=comma]{../Data/inertia_pendulum/error_norms.csv};
           \addlegendentry{$\lVert \dot{\theta}_{1,k}-\dot{\theta}_1(t_k) \rVert$}
         \end{axis}  
       \end{tikzpicture}
@@ -283,7 +283,7 @@ The comparison results between the proposed discretization scheme and ODE45 for 
           axis y line* = left,
           legend pos=north east
         ]
-        \addplot[mark=none, blue, thick] table[x=t,y=e2, col sep=comma]{../Data/error_norms.csv};
+        \addplot[mark=none, blue, thick] table[x=t,y=e2, col sep=comma]{../Data/inertia_pendulum/error_norms.csv};
         \addlegendentry{$\lVert \theta_{2,k}-\theta_2(t_k) \rVert$}
       \end{axis}  
       \begin{axis}[
@@ -295,7 +295,7 @@ The comparison results between the proposed discretization scheme and ODE45 for 
           axis y line* = right,
           legend style={at={(0.97,0.77)}}
         ]
-        \addplot[mark=none, red, thick] table[x=t,y=ed2, col sep=comma]{../Data/error_norms.csv};
+        \addplot[mark=none, red, thick] table[x=t,y=ed2, col sep=comma]{../Data/inertia_pendulum/error_norms.csv};
         \addlegendentry{$\lVert \dot{\theta}_{2,k}-\dot{\theta}_2(t_k) \rVert$}
       \end{axis}  
     \end{tikzpicture}
@@ -303,3 +303,115 @@ The comparison results between the proposed discretization scheme and ODE45 for 
     \label{fig:e2-ed2}
   \end{center}
 \end{figure}
+
+
+
+% \begin{figure}[ht]
+%   \begin{center}
+%     \begin{tikzpicture}
+%       \begin{axis}[
+%           width=0.8\linewidth,
+%           height=0.6\linewidth,
+%           xlabel=$t_k (s)$,
+%           ylabel=$x$ (m),
+%           xmin = 0, xmax = 10,
+%           axis x line* = none,
+%           axis y line* = left,
+%           legend style={at={(0.61,0.97)}}
+%         ]
+%         \addplot[mark=none, red, ultra thick] table[x=t,y=x, col sep=comma]{../Data/tora/states_original.csv};
+%         \addlegendentry{$x_{k}$}
+%         \addplot [mark=none, black, dashed, ultra thick]
+%         table[x=t,y=x,col sep=comma]{../Data/tora/states_ode45.csv}; 
+%         \addlegendentry{$x(t_k)$}
+%       \end{axis}
+%     \begin{axis}[
+%           width=0.8\linewidth,
+%           height=0.6\linewidth,
+%           xlabel=$t_k (s)$,
+%           ylabel=$\theta$ (rad),
+%           xmin = 0, xmax = 10,
+%           axis x line* = none,
+%           axis y line* = right,
+%           legend pos=north east
+%         ]
+%         \addplot[mark=none, blue, ultra thick] table[x=t,y=theta, col sep=comma]{../Data/tora/states_original.csv};
+%         \addlegendentry{$\theta{k}$}
+%         \addplot [mark=none, green, dashed, ultra thick]
+%         table[x=t,y=theta,col sep=comma]{../Data/tora/states_ode45.csv};
+%         \addlegendentry{$\theta(t_k)$}
+%       \end{axis}  
+%     \end{tikzpicture}
+%     \caption{System states $x_k$ for symmetric discretization plotted against exact discretization (ODE45) $x(t_k)$ for $t_k \in [0, 10]$}
+%     \label{fig:sim-2-results}
+%   \end{center}
+% \end{figure}
+
+% \begin{figure}[ht]
+%   \begin{center}
+%     \begin{tikzpicture}
+%     \begin{axis}[
+%           width=0.8\linewidth,
+%           height=0.6\linewidth,
+%           xlabel=$t_k (s)$,
+%           ylabel=$|| e(k) ||$,
+%           xmin = 0, xmax = 10,
+%           axis x line* = none,
+%           axis y line* = left,
+%           legend pos=north east
+%         ]
+%         \addplot[mark=none, blue, thick] table[x=t,y=e1, col sep=comma]{../Data/tora/error_norms.csv};
+%         \addlegendentry{$\lVert x_{k}-x(t_k) \rVert$}
+%       \end{axis}  
+%       \begin{axis}[
+%           width=0.8\linewidth,
+%           height=0.6\linewidth,
+%           xlabel=$t_k (s)$,
+%           ylabel=$||\dot{e}(k)||$,
+%           xmin = 0, xmax = 10,
+%           axis x line* = none,
+%           axis y line* = right,
+%           legend style={at={(0.97,0.77)}}
+%         ]
+%         \addplot[mark=none, red, thick] table[x=t,y=ed1, col sep=comma]{../Data/tora/error_norms.csv};
+%         \addlegendentry{$\lVert \dot{x}_{k}-\dot{x}(t_k) \rVert$}
+%       \end{axis}  
+%     \end{tikzpicture}
+%     \caption{Magnitude of error norm for $x$ and $\dot{x}$}
+%     \label{fig:e1-ed1-2}
+%   \end{center}
+% \end{figure}
+
+% \begin{figure}[ht]
+%   \begin{center}
+%     \begin{tikzpicture}
+%     \begin{axis}[
+%           width=0.8\linewidth,
+%           height=0.6\linewidth,
+%           xlabel=$t_k (s)$,
+%           ylabel=$|| e(k) ||$,
+%           xmin = 0, xmax = 10,
+%           axis x line* = none,
+%           axis y line* = left,
+%           legend pos=north east
+%         ]
+%         \addplot[mark=none, blue, thick] table[x=t,y=e2, col sep=comma]{../Data/tora/error_norms.csv};
+%         \addlegendentry{$\lVert \theta_{k}-\theta(t_k) \rVert$}
+%       \end{axis}  
+%       \begin{axis}[
+%           width=0.8\linewidth,
+%           height=0.6\linewidth,
+%           xlabel=$t_k (s)$,
+%           xmin = 0, xmax = 10,
+%           axis x line* = none,
+%           axis y line* = right,
+%           legend style={at={(0.97,0.77)}}
+%         ]
+%         \addplot[mark=none, red, thick] table[x=t,y=ed2, col sep=comma]{../Data/tora/error_norms.csv};
+%         \addlegendentry{$\lVert \dot{\theta}_{k}-\dot{\theta}(t_k) \rVert$}
+%       \end{axis}  
+%     \end{tikzpicture}
+%     \caption{Magnitude of error norm for $\theta$ and $\dot{\theta}$}
+%     \label{fig:e2-ed2-2}
+%   \end{center}
+% \end{figure}

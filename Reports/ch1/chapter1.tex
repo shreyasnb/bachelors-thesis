@@ -314,32 +314,39 @@ This is useful because, often we deal with \textsl{change of coordinates} in mec
 \matrix (m) [matrix of math nodes,row sep=3.5em,column sep=3.5em,minimum width=0.1em]
 {
    TM & TM &  TN & TN \\ TTM & TTM & TTN & TTN \\T(M \times M) & TM \times TM & TN \times TN & T(N \times N) \\ {} & M \times M & N \times N & {} \\};
+\path[-stealth, blue]
+(m-1-2) edge node [above] {$T\varphi$} (m-1-3)
+(m-4-2) edge node [above] {$\varphi \times \varphi$} (m-4-3);
+
+\path[-stealth, red]
+(m-2-1) edge node [left] {$T\tau_M$} (m-1-1)
+(m-2-2) edge node [left] {$\tau_{TM}$} (m-1-2)
+(m-2-3) edge node [right] {$\tau_{TN}$} (m-1-3)
+(m-2-4) edge node [right] {$T\tau_N$} (m-1-4)
+(m-2-1) edge node [left] {$T\D^{TM}$} (m-3-1)
+(m-2-2) edge node [left] {$\D^{TTM}$} (m-3-2)
+(m-2-3) edge node [right] {$\D^{TTN}$} (m-3-3)
+(m-2-4) edge node [right] {$T\D^{TN}$} (m-3-4);
+
 \path[-stealth]
-  (m-1-2) edge node [above] {$T\varphi$} (m-1-3)
   (m-2-2) edge node [above] {$TT\varphi$} (m-2-3)
   (m-3-2) edge node [above] {$T\varphi \times T\varphi$} (m-3-3)
-  (m-2-1) edge node [left] {$T\tau_M$} (m-1-1)
-  (m-2-2) edge node [left] {$\tau_{TM}$} (m-1-2)
-  (m-2-3) edge node [right] {$\tau_{TN}$} (m-1-3)
-  (m-2-4) edge node [right] {$T\tau_N$} (m-1-4)
-  (m-2-1) edge node [left] {$T\D^{TM}$} (m-3-1)
-  (m-2-2) edge node [left] {$\D^{TTM}$} (m-3-2)
-  (m-2-3) edge node [right] {$\D^{TTN}$} (m-3-3)
-  (m-2-4) edge node [right] {$T\D^{TN}$} (m-3-4)
   (m-3-2) edge node [left] {$\tau_{M \times M}$} (m-4-2)
-  (m-3-3) edge node [right] {$\tau_{N \times N}$} (m-4-3)
-  (m-4-2) edge node [above] {$\varphi \times \varphi$} (m-4-3);
-\path[<->]
+  (m-3-3) edge node [right] {$\tau_{N \times N}$} (m-4-3);
+\path[<->, red]
 (m-2-1) edge node [above] {$\kappa_M$} (m-2-2)
 (m-2-3) edge node [above] {$\kappa_N$} (m-2-4);
-\draw[double, double distance=2pt]
+\draw[double, double distance=2pt, blue]
   (m-1-1) -- (m-1-2)
-  (m-1-3) -- (m-1-4)
+  (m-1-3) -- (m-1-4);
+
+\draw[double, double distance=2pt, red]
   (m-3-1) -- (m-3-2)
   (m-3-3) -- (m-3-4);
-\draw[->, rounded corners]
+
+\draw[->, rounded corners, blue]
 (m-1-1) -- node[pos=1,fill=white,inner sep=0pt]{} ++(-3,0) |- node[above right, inner sep=10pt]{$\D^{TM}$} (m-4-2);
-\draw[->, rounded corners]
+\draw[->, rounded corners, blue]
 (m-1-4) -- node[pos=1, fill=white, inner sep=0pt]{} ++ (3,0) |- node[above left, inner sep=10pt]{$\D^{TN}$} (m-4-3);
 \end{tikzpicture}
   \caption{$\D^{TTM}$ and $\D^{TTN}$ commute as shown.}

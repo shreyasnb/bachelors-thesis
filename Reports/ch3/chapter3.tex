@@ -83,6 +83,28 @@ Thus, we see that the choice of discretization scheme can affect the feedback li
 
 \section{Feedback Linearizable Discretization}
 
+
+\begin{figure}[h]
+    \centering
+    \begin{tikzpicture}
+        \node (CTNS) at (0,0) {Continuous Time};
+        \node (CTNS-2) at (0, -0.5) {Nonlinear System on $M$};
+        \node (CTLS) at (8,0) {Continuous Time};
+        \node (CTLS-2) at (8,-0.5)  {Linear System on $N$ (i.e., $\R[n]$)};
+        \node (DTNS) at (0,-4) {Discrete Time};
+        \node (DTNS-2) at (0, -4.5) {Nonlinear System};
+        \node (DTLS) at (8,-4) {Discrete Time};
+        \node (DTLS-2) at (8, -4.5)  {Linear System};
+        \draw[->, blue] (CTNS) -- node[above]{\small{Feedback Linearization}} (CTLS);
+        \draw[->, red] (DTNS) -- node[above]{\small{Feedback Linearization}} (DTLS);
+        \draw[->, red] (CTNS-2) -- node[left]{Discretization (a)} (DTNS);
+        \draw[->, blue] (CTLS-2) -- node[right]{Discretization (b)} (DTLS);
+
+        \draw[dashed, thick, ->, >=stealth] (8, -2.25) .. controls (6,-1) .. (4, -2.25) .. controls (2,-3.5) ..  (0, -2.25);
+    \end{tikzpicture}
+    \caption{Feedback Linearizable Discretization}
+\end{figure}
+
 As seen from above, the following question persists: \textsl{Given a feedback linearizable continuous-time system, is it possible to construct a numerical discretization which is also feedback linearizable?}
 
 Yes. We can do this by using the notion of lifts of discretization maps, since the feedback linearization is a diffeomorphism. Invoking the proposition~\eqref{prop:retr-lift}, we can construct a discretization scheme:
