@@ -1,0 +1,177 @@
+% Chapter 2
+
+\chapter{Mechanical Control Systems} % Main chapter title
+
+\label{chap:sode} % For referencing the chapter elsewhere, use \ref{chap:Chapter2} 
+
+Mechanical systems are usually described by nonlinear second-order differential equations (SODEs). In this chapter, we will discuss the geometric formulation of SODEs and their discretization. We will define different classes of mechanical systems, and how a specific class of mechanical systems can be controlled using a technique called \textit{feedback linearization}.
+
+%----------------------------------------------------------------------------------------
+\section{Second-order differential equations (SODEs)} 
+Let $x \in M$ and $(x, \dot{x}) \in TM$ be the coordinates on the manifold $M$ and the induced coordinates on the tangent bundle of $M$, respectively. We know that a second-order differential equation is a vector field $X$ such that $\tau_{TM}(X) = T \tau_M (X)$. This implies that the vector field $X$ on $TM$ is a section of the second-order tangent bundle $TTM$. Locally, if we take coordinates $(x^i)$ on $M$ and induced coordinates $(x^i, \dot{x}^i)$ on $TM$, then:
+\begin{equation}
+    X = \dot{x}^i \frac{\partial}{\partial x^i} + X^i(x^i, \dot{x}^i) \frac{\partial}{\partial \dot{x}^i}
+\end{equation}
+To find the integral curves of $X$ is equivalent to solving the SODE:
+\begin{equation}
+\label{eq:sode}
+    \dfrac{d^2}{dt^2}x(t) = X \left( x(t), \dfrac{d}{dt}x(t) \right) 
+\end{equation}
+Now, we wish to discretize this using the notion of the discretization map on $TM$. We would like to tangently lift a discretization on $M$ to obtain $\D^{TTM}: TTM \lra TM \times TM$ as defined in Proposition \ref{prop:lift-commutator}. This yields the following numerical scheme [\cite{21MBLDMdD}]:
+\begin{equation}
+\label{eq:disc}
+\begin{split}
+    h X \left( \left(\tau_{TM} \circ \left(\D^{TTM}\right)^{-1}\right)(x_k, y_k; x_{k+1}, y_{k+1})\right) \\ = \left(\D^{TTM}\right)^{-1} (x_k, y_k; x_{k+1}, y_{k+1})
+\end{split}
+\end{equation}
+
+\subsection{Example}
+Let us say we choose the midpoint  discretization on $N={\mathbb R}^n$, denoted by $\D$ of the following form:
+\begin{equation}
+    \D^{TN}(\tilde{x}, \tilde{y}) = \left(\tilde{x} - \dfrac{\tilde{y}}{2}, \tilde{x} + \dfrac{\tilde{y}}{2} \right)
+\end{equation}
+for some $(\tilde{x}, \tilde{y}) \in TN$.
+Thus, similar to Example \ref{ex:midpoint-disc}, we have:
+
+\begin{equation}
+    \D^{TTN}(\tilde{x}, \dot{\tilde{x}}, \tilde{y}, \dot{\tilde{y}}) = \left( \tilde{x} - \dfrac{\tilde{y}}{2}, \tilde{x} + \dfrac{\tilde{y}}{2}, \dot{\tilde{x}} - \dfrac{\dot{\tilde{y}}}{2}, \dot{\tilde{x}} + \dfrac{\dot{\tilde{y}}}{2}\right)
+\end{equation}
+which is a discretization on $TN$.
+
+Now, to lift $\D^{TTN}$ to obtain $\D^{TTM}$, we use Proposition \ref{prop:lift-commutator}, which gives:
+
+\begin{equation}
+    \D^{TTM} = (T \phi \times T \phi)^{-1} \circ \D^{TTN} \circ TT\phi
+\end{equation}
+ which is also a discretization map on $TM$.
+
+ Using the numerical scheme from Equation \eqref{eq:disc}, we obtain:
+ \begin{equation}
+     \begin{split}
+         \dfrac{x_{k+1} - x_k}{h} & = \dfrac{y_{k+1} + y_k}{2}, \\
+         \dfrac{y_{k+1} - y_k}{h} & = X \left(\dfrac{x_k + x_{k+1}}{2}, \dfrac{y_k + y_{k+1}}{2} \right)
+     \end{split}
+ \end{equation}
+ which is the numerical scheme for a symmetric discretization of the SODE \eqref{eq:sode}.
+
+\section{Mechanical control systems}
+
+We define a mechanical control system as proposed in [\cite{10076262}].
+
+\begin{defn}
+    A mechanical control system $(\mathcal{MS})_{(n,m)}$ is defined by a $4$-tuple $(M, \nabla, \mathfrak{g}, e)$ where:
+    \begin{itemize}
+        \item $M$ is an $n$-dimensional manifold
+        \item $\nabla$ is a symmetric affine connection on $M$
+        \item $\mathfrak{g} = \{g_1, \dots, g_m\}$ is an $m$-tuple of control vector fields on $M$
+        \item $e$ is an uncontrolled vector field on $M$
+    \end{itemize}
+    $(\mathcal{MS})_{(n,m)}$ can be represented by the differential equation:
+    \begin{equation}
+        \label{eq:mech}
+        \nabla_{\dot{x}} \dot{x} = e(x) + \sum_{r=1}^m g_r(x) u_r 
+    \end{equation}
+    Or equivalently in local coordinates $x = (x^1, \dots, x^n)$ on $M$, 
+    \begin{equation}\label{SODE-initial}
+        \ddot{x}^i = - \Gamma ^i_{jk}(x)\dot{x}^j \dot{x}^k + e^i(x) + \sum_{r=1}^m g^i_r(x)u_r
+    \end{equation}
+    where $\Gamma^i_{jk}$ are the Christoffel symbols corresponding to the Coriolis and centrifugal force terms, $e(x)$ is the uncontrolled vector field, $g_r(x)$ are the controlled vector fields in $Q$.
+
+    If we write this as two first-order differential equations:
+    \begin{equation}\label{SODE-nonlinear}
+        \begin{split}
+            \dot{x}^i  &= y^i; \\
+            \dot{y}^i  &= - \Gamma^i_{jk}(x)y^jy^k + e^i(x) + \sum_{r=1}^m g_r^i(x)u_r
+        \end{split} \tag{$\mathcal{MS}$} 
+    \end{equation}
+\end{defn}
+
+\newpage
+
+\subsection{Example}
+
+Consider the classic example of an inverted pendulum on a cart:
+
+\begin{figure}[h]
+    \centering
+    \begin{tikzpicture} [thick]
+
+        % Angle of Pendulum
+        
+        % ground
+        \draw [brown!80!red] (-2,0) -- (2,0);
+        \fill [pattern = crosshatch dots,
+            pattern color = brown!80!red] (-2,0) rectangle (2,-.2);
+        
+        % cart
+        \begin{scope} [draw = orange,
+            fill = orange!20, 
+            dot/.style = {orange, radius = .025}]
+        
+        \filldraw [rotate around = {-30:(0,1.5)}] (.09,1.5) -- 
+            node [midway, right] {$l$} 
+            node [very near end, right] {$m$}
+            +(0,2) arc (0:180:.09) 
+            coordinate [pos = .5] (T) -- (-.09,1.5);
+        
+        \filldraw (-.65,.15) circle (.15);
+        \fill [dot] (-.65,.15) circle;
+        \filldraw (.65,.15) circle (.15);
+        \fill [dot] (.65,.15) circle;
+        
+        \filldraw (-1,1.5) -- coordinate [pos = .5] (F)
+            (-1,.3) -- node [right, above, near end] {$M$}
+            (1,.3) -- (1,1.5) 
+            coordinate (X) -- (.1,1.5)
+            arc (0:180:.1) -- (-1.014,1.5);
+        
+        \fill [dot] (0,1.52) circle;
+        \end{scope}
+        
+        % lines and angles
+        \begin{scope} [thin, orange!50!black]
+            \draw (T) -- (0,1.52) coordinate (P);
+            \draw [dashed] (P) + (0,-2) -- +(0,2.2);
+            \draw (P) + (0,.5) arc (90:90-30:.5) node [black, midway, above] {$\theta$};
+            \draw [->] (0,-0.5) -- (1.2,-0.5) node [black, right] {$x$};
+        \end{scope}
+
+    \end{tikzpicture}
+\end{figure}
+
+The equations of motion for this system are given by:
+
+\begin{equation}
+    \begin{split}
+        (M + m) \ddot{x} + ml \cos{\theta} \ddot{\theta} - m l \sin{\theta} {(\dot{\theta})}^2 = F \\
+        ml \cos{\theta} \ddot{x} + \dfrac{4}{3} ml^2 \ddot{\theta} - mgl \sin{\theta} = 0
+    \end{split}
+\end{equation}
+
+where $F$ is the force applied to the cart.
+
+Let us define $x^1 = x, x^2 = \theta$ and we denote $\dot{x}^1 = y^1, \dot{x}^2 = y^2$. We can write the above equations as:
+
+\begin{equation}
+    \label{eq:mech-ex}
+    \begin{split}
+        \dot{x}^1 &= y^1 \\
+        \dot{x}^2 &= y^2 \\
+        \dot{y}^1 &= -\Gamma_{22}^1 y^2 y^2 + e^1 + g^1 u \\
+        \dot{y}^2 &= -\Gamma_{22}^2 y^2 y^2 + e^2 + g^2 u
+    \end{split}
+\end{equation}
+
+where, for $\eta = \dfrac{3}{ml^2 \left(4(M + m) - 3m \cos^2{\theta} \right)}$ we have:
+
+\begin{equation*}
+    \begin{split}
+        \Gamma_{22}^1 &= \left(-\dfrac{4}{3} m^2 l^3 \sin^3{\theta}\right)\eta \hspace{50pt} \Gamma_{22}^2 = \left(\dfrac{1}{2} m^2 l^2 \sin{2\theta}\right) \eta \\
+        e^1 &= \left(\dfrac{1}{2} m^2 l^2 g \sin{2\theta}\right) \eta \hspace{50pt} e^2 = \left( (M + m) mgl \sin{\theta} \right) \eta \\
+        g^1 &= \left(\dfrac{4}{3} ml^2 \right) \eta \hspace{90pt} g^2 = \left( - ml \cos{\theta} \right) \eta 
+    \end{split}
+\end{equation*}
+
+Thus, this system in \eqref{eq:mech-ex} is in the form of a mechanical control system \eqref{SODE-nonlinear}.
+
+It is be interesting to note that this system is mechanically feedback linearizable only if the input is given to the pendulum (as torque) and not the cart!

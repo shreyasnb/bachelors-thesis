@@ -1,0 +1,402 @@
+% Chapter 1
+% 
+\chapter{Introduction} % Main chapter title
+\label{chap:intro} % For referencing the chapter elsewhere, use Chapter~\ref{Chapter1}
+
+
+%-------------------------------------------------------------------------------
+%---------
+%
+\section{Retraction Maps} 
+\label{sec:retr-intro} %For referencing this section elsewhere, use Section~\ref{sec:chap1_introduction}
+
+The notion of a retraction map is fundamental in research areas like optimization theory, machine learning, numerical analysis, and in this context, geometric integrators. \\ Many mechanical systems usually evolve on manifolds, which naturally requires some method of discretely approximating the dynamics on the manifold (i.e., the geodesic). 
+
+In Riemannian geometry, this idea is given by the exponential map. On a Riemannian manifold $(M, g)$, we define $\exp_x: T_x M \lra M$ as the exponential map at the point $x$. For instance, if  $\gamma: [0, 1] \lra M$ is a unique geodesic on $M$, and $\gamma(0) = x$, then $\exp_x(v) = \gamma(1)$, where $v \in T_x M$ is the initial velocity of the geodesic at $x$ such that $\dot{\gamma}(0) = v$.
+
+    \begin{figure}[h]
+        \centering
+        \scalebox{0.8}{
+           \begin{tikzpicture}[
+          point/.style = {draw, circle, fill=black, inner sep=1.4pt}
+        ]
+                \draw[fill=green!15, draw=black, shift={(0.4, 1.4)},scale=1.5] (0, 0) to[out=20, in=140] (3, -0.4) to [out=60, in=160] (10, 1) to[out=130, in=60]
+          cycle;
+        \filldraw[xslant=-0.5, fill=gray!60, opacity=0.25]
+          (8,7) -- (16,7) -- (16,3) -- (8,3) -- cycle; 
+          \node at (11.6, 6) {$T_x M$};
+          \node at (2,2.4) {$M$};
+          \node at (10, 5) {$x = \gamma(0)$};
+          \node[red] at (7, 5) {$v = \dot{\gamma}(0)$};
+          \node[blue] at (4.5, 3) {$\Ret_x(v)$};
+          \node[black] at (6.8, 3.7) {$\gamma(t)$};
+          \coordinate (X) at (9,4.9);
+          \coordinate (O) at (5.4,4.4);
+          \coordinate (P) at (5.4,2.4);
+            \node[point] at (X) {};
+          \node[point] at (P) {};
+          \draw[thick, dashed] (5.5, 2.7) arc (153:92:4);
+          \draw[blue, -{Latex[length=4mm]}] (O) -- (P);
+          \draw[red, -{Latex[length=4mm]}] (X) -- (O);
+        \end{tikzpicture}}
+        \caption{Retraction maps: A visualization}
+            \label{fig:retraction}
+        \end{figure}
+
+Let $M$ be an $n$ dimensional manifold, and $TM$ be its tangent bundle.
+
+\begin{defn}\label{defn:retraction}
+We define a \textbf{retraction map} on a manifold $M$ as a smooth map $\Ret: TM \to M$, such that if $\Ret_x$ be the restriction of $\Ret$ to $T_x M$, then the following properties are satisfied:
+
+    \begin{enumerate}
+        \item $\Ret_x (0_x) = x$ where $0_x$ is the zero element of $T_x M$.
+        \item $\text{D}\Ret_x (0_x ) = T_{0_x} \Ret_x = \mathbb{I}_{T_x M} $, where $\mathbb{I}_{T_x M}$ is the identity mapping on $T_x M$.
+    \end{enumerate}
+\end{defn}
+
+Here, the first property is trivial, whereas the second property is known as the \textbf{local rigidity condition} since, given $v \in T_x M$, the curve $\gamma_v(t) = \Ret_x(tv)$ has initial velocity $v$ at $x$. Hence,
+
+\[
+  \dot{\gamma}_v (t) = \langle \text{D}\Ret_x (tv) , v \rangle \implies \dot{\gamma}_v (0) = \mathbb{I}_{T_x M}(v) = v
+\]
+
+\section{Discretization maps}
+
+\begin{defn}
+A map $\D : U \subset TM \lra M \times M$ given by 
+
+\[
+  \D (x,v) = \left( R^1_x(v), R^2_x(v) \right)
+\]
+
+where $U$ is the open neighborhood of the zero section $0_x \in TM$, is called a \textbf{discretization map} on $M$, if the following properties are satisfied:
+
+\begin{enumerate}
+  \item $\D(x,0_x) = (x,x)$ 
+  \item $T_{0_x}R_x^2 - T_{0_x}R_x^1 = \mathbb{I}_{T_x M}$, which is the identity map on $T_x M$ for any $x \in M$.
+\end{enumerate}
+\end{defn}
+
+Using this definition, one can prove (not included here) that the discretization map $\D$ is a local diffeomorphism around the zero section $0_x \in TM$. This is a crucial property for the construction of geometric integrators, since we need to be able to define $\D^{-1} (x_k, x_{k+1})$.
+
+\begin{rmk}
+  Note that $R^i_x : T_x M \lra M$ here, is \textbf{not} a retraction map $\Ret_x$ in general.
+\end{rmk}
+
+\begin{rmk}
+  The discretization map $\D$ actually takes a \textbf{single} element $(x,v) \in TM$ and maps it to a pair of elements $(x_k , x_{k+1}) \in M \times M$.
+\end{rmk}
+
+Thus, given a vector field $X \in \mathfrak{X}(M)$ on $M$, i.e., $X: M \lra TM$ such that $\tau_M \circ X = \mathbb{I}_M$, where $\tau_M: TM \lra M$ is the canonical projection on the tangent bundle, we can approximate the integral curve by the following first-order discrete equation:
+
+\[
+  h X(\tau_M(\D^{-1}(x_k, x_{k+1}))) = \D^{-1}(x_k, x_{k+1})
+\]
+
+Hence, given an initial condition $x_0$, we may be able to solve the discrete equation iteratively to obtain the sequence $\{x_k\}$ which is indeed an approximation of $\{x(kh)\}$, where $x(t)$ is the integral curve of $X$ with initial condition $x_0$ and time-step $h$.
+
+\subsection{Examples}
+We consider a few examples of discretization maps on $\R[n]$ [for $\dot{x}(t) = X(x(t))$]:
+
+\begin{table}[h]
+\centering
+\begin{tabular}{|c|c|c|}
+\hline
+ Discretization map $\D$ & Scheme & Order \\
+\hline
+ $\D(x,v) = (x, x + v)$ & Forward Euler $x_{k+1} = x_k + hX(x_k)$ & $\mathcal{O}(h)$ \\
+ $\D(x,v) = (x - v, x)$ & Backward Euler $x_k = x_{k+1} - hX(x_{k+1})$ & $\mathcal{O}(h)$\\
+ $\D(x, v) = \left(x - \dfrac{v}{2}, x + \dfrac{v}{2} \right)$ & Symmetric Euler $x_{k+1} = x_k + hX\left( \dfrac{x_k + x_{k+1}}{2}\right)$ & $\mathcal{O}(h^2)$\\
+\hline
+\end{tabular}
+\caption{Examples of discretization maps}
+\end{table}
+
+
+\section{Lifts of discretization maps}
+
+As mentioned before, discretization maps are diffeomorphisms around the zero section $0_x \in TM$. 
+This is useful because typically when studying mechanical systems, we would like to define the discretization map on the tangent bundle $TM$ (for Lagrangian frameworks) or the cotangent bundle $T^*M$ (for Hamiltonian frameworks), in order to generate geometric integrators on the manifold.
+
+Thus, since discretization maps can be defined on different manifolds, we denote $\D^{TM} : TM \lra M \times M$ as a discretization map on $M$.
+
+\subsection{Tangent Lifts}
+
+Given a smooth map $\varphi: M \lra N$ between two $n$-dimenstional manifolds $M$ and $N$, we can define the \textbf{tangent lift} of $\varphi$ as the map $T\varphi: TM \lra TN$ such that
+
+\[
+  T\varphi(v_x) = T_x \varphi(v_x) \in T_{\varphi(x)} N
+\]
+
+where $v_x \in T_x M$ and $T_x\varphi$ is the tangent map of $\varphi$, whose matrix is the Jacobian at $x \in M$, in a local chart.
+
+\begin{prop}
+  \label{prop:retr-lift}
+Let $M$ and $N$ be two $n$-dimensional manifolds, and $\varphi: M \lra N$ be a smooth map (diffeomorphism). For a given discretization map $\D^{TM}$ on $M$, the map $\D_{\varphi} :=  (\varphi \times \varphi) \circ \D^{TM} \circ T \varphi ^{-1}$ is a discretization map on $N$ i.e., $\D_{\varphi} \equiv \D^{TN} : TN \lra N \times N$.
+\end{prop}
+
+
+\begin{proof}
+  For any given $y \in N$, we have that 
+  \begin{equation*}
+    \begin{split}
+      \D_{\varphi} (y, 0_y) &= ((\varphi \times \varphi) \circ \D^{TM} \circ T\varphi^{-1}) (y, 0_y) \\
+      &= ((\varphi \times \varphi) \circ \D^{TM} \circ T\varphi^{-1}) (\varphi(x), 0_{\varphi(x)}) \\
+      &= (\varphi \times \varphi) \circ \D^{TM} (x, 0_x) \\ 
+      &= (\varphi \times \varphi) (x, x) = (y, y)
+    \end{split}
+  \end{equation*}
+
+  which proves the first condition. For the second condition, let $v_y \in T_y N$, be a given vector.
+  \begin{equation*}
+    \begin{split}
+      (T_{0_x} R_{x, \varphi}^2 - & T_{0_x} R_{x, \varphi}^1 )(y, u_y) = \dfrac{d}{ds} \bigg{|}_{s=0} \left( R_{x, \varphi}^2 (y, su_y) - R_{x, \varphi}^1 (y, su_y) \right) \\
+      &= \dfrac{d}{ds} \bigg{|}_{s=0} \left(\varphi \circ R^1_x \circ T\varphi^{-1} (y, su_y) \right) -  \left( \varphi \circ R^2_x \circ T \varphi^{-1}(y, su_y) \right) \\
+      &= T_y \varphi \left( \dfrac{d}{ds} \bigg{|}_{s=0} \left[ R^1_x(t(T\varphi^{-1} (y, u_y))) \right] - \left[ R^2_x(t(T\varphi^{-1} (y, u_y))) \right] \right) \\
+      &= T_y \varphi (T_y \varphi^{-1} (y, u_y)) = (y, u_y)
+    \end{split}
+  \end{equation*}
+
+Thus, both the conditions from Definition~\ref{defn:retraction} are satisfied.
+\end{proof}
+
+The above proposition can be visualized as shown below in Figure~\ref{fig:commutator}.
+
+\begin{figure}[h]
+  \centering
+  \begin{tikzpicture}
+\matrix (m) [matrix of math nodes,row sep=3em,column sep=4em,minimum width=2em]
+{
+   TM & TN \\ M \times M & N \times N \\};
+\path[-stealth]
+  (m-1-1) edge node [above] {$T\varphi$} (m-1-2)
+  (m-1-1) edge node [left] {$\D^{TM}$} (m-2-1)
+  (m-1-2) edge node [right] {$\D^{TN}$} (m-2-2)
+  (m-2-1) edge node [below] {$\varphi \times \varphi$} (m-2-2);
+\end{tikzpicture}
+  \caption{$\D^{TM}$ and $\D^{TN}$ commute as shown}
+  \label{fig:commutator}
+\end{figure}
+
+Now, if we suitably lift the discretization map $\D : TM \lra M \times M$, we can get a discretization map on $TM$, i.e., we can define $\D^{TTM} : TTM \lra TM \times TM$ as a discretization map on $TM$. This construction will provide the geometric framework for integrators for second-order differential equations (SODEs) on manifolds, and consequently, for mechanical systems.
+
+Let $M$ be an $n$-dimensional manifold, and $\tau_M : TM \lra M$ be the canonical projection on the tangent bundle. We denote $TTM$ as the \textbf{double tangent bundle} of $M$.
+
+We note that the manifold $TTM$ naturally accepts two different vector bundle structures:
+
+\begin{enumerate}
+  \item The canonical vector bundle with projection $\tau_{TM} : TTM \lra TM$.
+  \item The vector bundle given by the projection of the tangent map $T \tau_M : TTM \lra TM$. 
+\end{enumerate}
+
+Thus, we denote the canonical involution map $\kappa_M : TTM \lra TTM$ which is a vector bundle isomorphism, over the identity of $TM$ between the above two vector bundle structures.
+
+This can be seen here: Let $(x,v)$ be the canonical coordinates on $TM$, and $(x, v, \dot{x}, \dot{v})$ are the corresponding canonical fibered coordinates on $TTM$. Then,
+
+\[
+ \kappa_M (x, v, \dot{x}, \dot{v}) = (x,\dot{x}, v, \dot{v})
+\]
+
+\begin{rmk}{Why do we need this?}
+  Remember that the tangent lift of a vector field $X$ on $M$ does not define a vector field on $TM$. It is necessary to consider the composition $\kappa_M \circ TX$ to obtain a vector field on $TM$, and this is called the \textbf{complete lift} $X^c$ of the vector field $X$. 
+  Hence, a similar technique must be used to lift a discretization map from $TM$ to $TTM$.
+\end{rmk}
+
+\begin{figure}[h]
+  \centering
+  \begin{tikzpicture}[scale=0.9, transform shape]
+\matrix (m) [matrix of math nodes,row sep=3em,column sep=5em,minimum width=2em]
+{
+   TTM & TM \times TM \\ TTM & T(M \times M) \\ TM & M \times M \\};
+\path[-stealth]
+    (m-1-1) edge node [above] {$\D^{TTM}$} (m-1-2)
+    (m-2-1) edge node [above] {$T \D^{TM}$} (m-2-2)
+    (m-2-1) edge node [left] {$\tau_{TM}$} (m-3-1)
+    (m-2-2) edge node [right] {$\tau_{M \times M}$} (m-3-2)
+    (m-3-1) edge node [above] {$\D^{TM}$} (m-3-2); 
+\path[<->]
+    (m-1-1) edge node [left] {$\kappa_M$} (m-2-1)
+    (m-2-1) edge node [right] {$\kappa_M$} (m-1-1);
+\draw[double]
+    (m-1-2) -- (m-2-2);
+\end{tikzpicture}
+  \caption{Tangent lift structure of discretization maps}
+  \label{fig:tangent-lift}
+\end{figure}
+
+Using the above construction, we can now define the tangent lift of a discretization map.
+
+\begin{prop}
+  If $\D^{TM} : TM \lra M \times M$ is a discretization map on $M$, then the map defined by $\D^{TTM} = T\D^{TM} \circ \kappa_M$ is a discretization map on $TM$.
+\end{prop}
+
+\begin{proof}
+  For $(x,v,\dot{x}, \dot{v}) \in TTM$, we have that 
+  
+  \[T\D^{TM}(x,v,\dot{x}, \dot{v}) = \left( \D^{TM}(x,v), D_{(x,v)} \D^{TM}(x,v) {(\dot{x}, \dot{v})}^T \right)\] and
+  \[
+    \D^{TTM}(x, \dot{x}, v, \dot{v}) = (\D^{TM}(x,v), D_{(x,v)}\D^{TM}{(\dot{x}, \dot{v})}^T) 
+  \]
+
+  Using the properties defined in Definition~\eqref{defn:retraction},  
+  \begin{enumerate}
+      \item We know that $\D^{TM}(x, 0) = (x,x) \ \forall x \in M$. Thus,
+      \begin{equation*}
+      \begin{split}
+          \D^{TTM}(x,\dot{x}, 0, 0) & = \left( \D^{TM}(x, 0), D_{(x,0)} \D^{TM}(\dot{x}, 0) \right) \\
+          & = (x,x, \dot{x}, \dot{x}) \equiv (x, \dot{x}, x, \dot{x})
+      \end{split}
+      \end{equation*}
+       
+      where we trivially identify $T(M \times M) \equiv TM \times TM$.
+      \item For the rigidity property, we know that
+      \[\D^{TTM}(x, \dot{x}, v, \dot{v}) = \left({(TR^1)}_{(x,\dot{x})}(v, \dot{v}), {(TR^2)}_{(x,\dot{x})}(v, \dot{v}) \right)\]
+      So, we need to compute 
+      \[T_{{(0,0)}_{(x,\dot{x})}}{(TR^a)}_{(x, \dot{x})}(x, \dot{x}) : T_{(x, \dot{x})}TM \lra T_{(x, \dot{x})}TM\]
+      for $a=1,2$, to prove that the map ${T(TR^2)}_{(x,\dot{x})} - T(TR^1)_{(x, \dot{x})}$ is the identity map at the zero section $(0,0)_{(x,\dot{x})}$, from $T_{(x, \dot{x})} TM$ to itself.
+
+      We can calculate 
+          \[\dfrac{d}{ds}\bigg|_{s=0} \left( R^a_x( sv), \partial_{x} R^a_x(sv) \dot{x} + \partial_v R^a_x(sv) s \dot{v} \right)\]
+      
+      At $(x, \dot{x}, 0, 0)$, the map $T_{(0,0)_{(x, \dot{x})}}(TR^a)_{(x, \dot{x})}$ is thus given by:
+      \[\pmat{
+      \partial_{v^j}(R^a)^i(x, 0) & 0 \\
+      \partial_{x^k} \partial_{v^j} (R^a)^i(x,0) \dot{x}^k & \partial_{v^j}(R^a)^i(x,0)
+      }\]
+      
+      \vspace{-1mm}
+      Thus, using the properties of the discretization map $\D$, we have the Jacobian matrix of $(TR^2)_{(x, \dot{x})} - (TR^1)_{(x, \dot{x})}$ at $(0,0)_{(x, \dot{x})}$ as:
+      \[\pmat{
+      \partial_{v}(R^2-R^1)(x,0) & 0 \\
+      \partial_x(\partial_v(R^2 - R^1)(x,0))\dot{x} & \partial_v (R^2-R^1)(x,0)
+      } = \mathbb{I}_{2n \times 2n}
+      \]
+
+      \vspace{-1mm}
+      since $\partial_v (R^2-R^1)(x,0) = \mathbb{I}_{n \times n}$ which also implies $\partial_x(\partial_v(R^2 - R^1))(x,0) = 0$
+  \end{enumerate}
+\end{proof}
+
+\subsection{Example}
+\label{ex:midpoint-disc}
+Let us consider the midpoint rule as an example. Thus, if $M$ is a vector space, $\D : TM \lra M \times M$ is the discretization map given by $\D(x,v) = \left( x - \frac{1}{2}v, x + \frac{1}{2}v \right)$. We can also compute the inverse map as $\D^{-1}(x_k, x_{k+1}) = \left(\dfrac{x_k + x_{k+1}}{2}, x_{k+1} - x_k \right)$.
+
+\newpage
+
+To define the tangent lift of $\D$, denoted by $\D^{TTM}: TTM \lra TM \times TM$, we need to compute the Jacobian of $\D$,
+
+\[
+  D_{(x,v)} \D = \pmat{\mathbb{I} & -\dfrac{1}{2} \mathbb{I} \\ \mathbb{I} & \dfrac{1}{2} \mathbb{I}}
+\]
+which yields the tangent lift of $\D$ as:
+
+\begin{equation*}
+  \begin{split}
+    \D^{TTM} (x, \dot{x}, v, \dot{v}) &= (T\D \circ \kappa_M)\left( x, \dot{x}, v, \dot{v} \right) = T\D(x, v ; \dot{x}, \dot{v}) \\
+    &= \left( x - \dfrac{1}{2}v, x + \dfrac{1}{2}v ; \dot{x} - \dfrac{1}{2}\dot{v}, \dot{x} + \dfrac{1}{2} \dot{v} \right) \\
+    & \equiv \left( x - \dfrac{1}{2}v, \dot{x} - \dfrac{1}{2}\dot{v} ; x + \dfrac{1}{2}v, \dot{x} + \dfrac{1}{2} \dot{v} \right)
+  \end{split}
+\end{equation*}
+
+We can also obtain the inverse map of $\D^{TTM}$ as 
+
+\[ {\left(\D^{TTM}\right)}^{-1} (x_k, v_k; x_{k+1}, v_{k+1}) = \left( \dfrac{x_k + x_{k+1}}{2}, \dfrac{v_k + v_{k+1}}{2}; x_{k+1} - x_k, v_{k+1} - v_k \right) \]
+
+\section{Generalizing construction of discretization maps}
+
+In Proposition \ref{prop:retr-lift}, we have seen how a discretization map $\D_{\varphi}$ can be constructed on a manifold $N$ given a diffeomorphism $\varphi: M \lra N$ and a discretization map $\D^{TM}$ on $M$. This construction can be extended to $TTN$ as well.
+
+This is useful because, often we deal with \textsl{change of coordinates} in mechanical systems, which may simplify, or attribute more meaning to the system. Hence, if we choose to define a discretization scheme on the new coordinates, we must be able to lift it back to the original manifold.
+
+\begin{figure*}[h]
+  \centering
+  \begin{tikzpicture}[scale=0.75, transform shape]
+\matrix (m) [matrix of math nodes,row sep=3.5em,column sep=3.5em,minimum width=0.1em]
+{
+   TM & TM &  TN & TN \\ TTM & TTM & TTN & TTN \\T(M \times M) & TM \times TM & TN \times TN & T(N \times N) \\ {} & M \times M & N \times N & {} \\};
+\path[-stealth, blue]
+(m-1-2) edge node [above] {$T\varphi$} (m-1-3)
+(m-4-2) edge node [above] {$\varphi \times \varphi$} (m-4-3);
+
+\path[-stealth, red]
+(m-2-1) edge node [left] {$T\tau_M$} (m-1-1)
+(m-2-2) edge node [left] {$\tau_{TM}$} (m-1-2)
+(m-2-3) edge node [right] {$\tau_{TN}$} (m-1-3)
+(m-2-4) edge node [right] {$T\tau_N$} (m-1-4)
+(m-2-1) edge node [left] {$T\D^{TM}$} (m-3-1)
+(m-2-2) edge node [left] {$\D^{TTM}$} (m-3-2)
+(m-2-3) edge node [right] {$\D^{TTN}$} (m-3-3)
+(m-2-4) edge node [right] {$T\D^{TN}$} (m-3-4);
+
+\path[-stealth]
+  (m-2-2) edge node [above] {$TT\varphi$} (m-2-3)
+  (m-3-2) edge node [above] {$T\varphi \times T\varphi$} (m-3-3)
+  (m-3-2) edge node [left] {$\tau_{M \times M}$} (m-4-2)
+  (m-3-3) edge node [right] {$\tau_{N \times N}$} (m-4-3);
+\path[<->, red]
+(m-2-1) edge node [above] {$\kappa_M$} (m-2-2)
+(m-2-3) edge node [above] {$\kappa_N$} (m-2-4);
+\draw[double, double distance=2pt, blue]
+  (m-1-1) -- (m-1-2)
+  (m-1-3) -- (m-1-4);
+
+\draw[double, double distance=2pt, red]
+  (m-3-1) -- (m-3-2)
+  (m-3-3) -- (m-3-4);
+
+\draw[->, rounded corners, blue]
+(m-1-1) -- node[pos=1,fill=white,inner sep=0pt]{} ++(-3,0) |- node[above right, inner sep=10pt]{$\D^{TM}$} (m-4-2);
+\draw[->, rounded corners, blue]
+(m-1-4) -- node[pos=1, fill=white, inner sep=0pt]{} ++ (3,0) |- node[above left, inner sep=10pt]{$\D^{TN}$} (m-4-3);
+\end{tikzpicture}
+  \caption{$\D^{TTM}$ and $\D^{TTN}$ commute as shown.}
+  \label{fig:double-comm}
+\end{figure*}
+
+Let $M$ and $N$ be two $n$-dimensional manifolds, and $\varphi: M \lra N$ be a diffeomorphism, which denotes some \textit{change of coordinates}. The questions of importance is the following:
+
+\textit{If we wish to have a discretization map $\D^{TN}$ on $N$, how do we obtain the discretization on the original tangent space $TM$, i.e., $\D^{TTM}$?}
+
+The double commutator in Figure~\ref{fig:double-comm} explains the procedure as follows:
+
+\begin{enumerate}
+  \item Start with a required discretization map $\D^{TN}$ on $N$, and a given $\varphi: M \lra N$.
+  \item Lift it back (refer Fig.~\ref{fig:commutator}) to $TM$ to obtain $\D^{TM}$ using: \[\D^{TM} = (\varphi \times \varphi)^{-1} \circ \D^{TN} \circ T\varphi\] 
+  \item Obtain $D^{TTM}$ by the tangent lift (refer Fig.~\ref{fig:tangent-lift}) of $\D^{TM}$, i.e., \[\D^{TTM} = T\D^{TM} \circ \kappa_M\]
+\end{enumerate}
+
+\textit{Can we construct $\D^{TTM}$ from $\D^{TTN}$?}
+
+\begin{prop}
+  \label{prop:lift-commutator}
+    Let $M$ and $N$ be $n$ dimensional manifolds and $\varphi(x) = \tilde{x}$, where $\varphi$ is a diffeomorphism and $x \in M, \tilde{x} \in N$. Let $TM$ and $TN$ be the tangent bundles of $M$ and $N$, respectively. By definition, if $(x,\dot{x}) \in TM$ and $(\tilde{x}, \dot{\tilde{x}}) \in TN$, then $T\varphi(x,\dot{x}) = (\tilde{x}, \dot{\tilde{x}})$ through the same diffeomorphism. For a given discretization map $\D^{TTM}$ on $TM$, $\D^{TTN} := (T\varphi \times T \varphi) \circ \D^{TTM} \circ TT\varphi^{-1}$ is a discretization map on $TN$ (refer Figure~\ref{fig:double-comm}).
+    
+    \begin{proof}
+        For any given $(\tilde{x}, \dot{\tilde{x}}) \in TN$, we have that:
+        \begin{equation*}
+        \begin{split}
+            \D^{TTN}(\tilde{x}, \dot{\tilde{x}}, 0, 0) & = \left( (T\varphi \times T \varphi) \circ \D^{TTM} \circ TT\varphi^{-1} \right) (\tilde{x}, \dot{\tilde{x}}, 0, 0) \\
+            & =  (T\varphi \times T \varphi) \circ \D^{TTM} (x, \dot{x}, 0, 0) \\
+            & = (T \varphi \times T \varphi) (x, \dot{x}, x, \dot{x}) = (\tilde{x}, \dot{\tilde{x}}, \tilde{x}, \dot{\tilde{x}})
+        \end{split}
+        \end{equation*}
+        which proves the first condition in \eqref{defn:retraction}.
+        
+        Now, for coordinates $(\tilde{x}, \dot{\tilde{x}}, \tilde{y}, \dot{\tilde{y}}) \in TTN$, 
+        \begin{equation*}
+            \begin{split}
+                & (T_{(0_{\tilde{x}}, 0_{\dot{\tilde{x}}})}(TR^2_{\varphi})_{(\tilde{x}, \dot{\tilde{x}})} - T_{(0_{\tilde{x}}, 0_{\dot{\tilde{x}}})} (TR^1_{\varphi})_{(\tilde{x}, \dot{\tilde{x}})})(\tilde{x}, \dot{\tilde{x}}, \tilde{y}, \dot{\tilde{y}}) \\
+                & = \dfrac{d}{ds} \bigg|_{s=0} [(T\varphi \circ (TR^1) \circ TT\varphi^{-1})(\tilde{x}, \dot{\tilde{x}}, s\tilde{y}, s\dot{\tilde{y}}) \\
+                & - (T\varphi \circ (TR^2) \circ TT\varphi^{-1})(\tilde{x}, \dot{\tilde{x}}, s\tilde{y}, s\dot{\tilde{y}})] \\
+                & = T_{(\tilde{x}, \dot{\tilde{x}})}T\varphi \pmat{ \dfrac{d}{ds} \bigg|_{s=0} [(TR^1)(s (TT\varphi^{-1})(\tilde{x},\dot{\tilde{x}}, \tilde{y}, \dot{\tilde{y}})) \\
+                - (TR^2)(s (TT\varphi^{-1})(\tilde{x},\dot{\tilde{x}}, \tilde{y}, \dot{\tilde{y}}))]
+                } \\
+                & = T_{(\tilde{x}, \dot{\tilde{x}})}T\varphi((TT\varphi^{-1})(\tilde{x}, \dot{\tilde{x}}, \tilde{y}, \dot{\tilde{y}})) = (\tilde{x}, \dot{\tilde{x}}, \tilde{y}, \dot{\tilde{y}})
+            \end{split}
+        \end{equation*}
+        which proves the second condition in~\eqref{defn:retraction}.
+
+        Note that $R : TM \lra M \times M$ and $R_{\varphi} : TN \lra N \times N$ are retraction maps on $M$ and $N$ respectively.
+        Thus, using the linearity of the map $TT\varphi$, we prove that $\D^{TTN}$ is indeed a discretization map on $TN$.
+    \end{proof}
+\end{prop}
